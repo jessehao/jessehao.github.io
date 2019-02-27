@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="Jesse Hao">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Objective-C的内存管理艺术：入门">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="Zeriodical">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://github.com/jessehao/jessehao.github.io.git">
+  
+    <link rel="alternate" href="/atom.xml" title="Zeriodical" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Zeriodical</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/jessehao.github.io/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/jessehao.github.io/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/jessehao.github.io//img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Objective-C的内存管理艺术：入门</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/jessehao.github.io/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/jessehao.github.io/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/jessehao">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:jeasygates@hotmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Jesse Hao</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2019-02-27</span>
+            <span class="time">14:05:03</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/jessehao.github.io/tags/ios/">#ios</a> <a class="tag" href="/jessehao.github.io/tags/objc/">#objc</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p><img src="http://upload-images.jianshu.io/upload_images/1704151-2b4e62102744ddcc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="文章框架"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p> 呀！！再也不三心二意了，从今往后专心搞iOS！嗯！<br>从大一开始就嚷嚷对iOS热爱的很，结果呢，就毕设写了个垃圾，咦！<br>所以现在起，iOS就是我的主线了！先写这篇垃圾文章壮壮气势！</p>
+<p>本篇内容非常浅显的谈谈Objective-C中的内存管理，适合那些会写点简单的App但从未认真对待过内存管理的初级iOS工程师阅读，在整个内存管理的艺术之路上入个门。</p>
+<hr>
+<h2 id="传统内存管理"><a href="#传统内存管理" class="headerlink" title="传统内存管理"></a>传统内存管理</h2><p>传统的内存管理我想从C语言说起。当你用<code>malloc</code>函数申请一片空间的时候（或是C++的<code>new</code>），就一定要用<code>free</code>函数释放掉（或是C++的<code>delete</code>）。</p>
+<p>但是在面向对象的世界，我们一切打交道的东西是<strong>对象</strong>，这玩意你可不能说来就来说走就走，来就得初始化一下（<strong>构造函数</strong>，空间申请+变量初始化），走就得垂死挣扎一下（<strong>析构函数</strong>，遗产管理+空间释放）。</p>
+<p>Objective-C是一门面向对象的语言，所以其与之对应的方法就是<code>alloc</code>、<code>init</code>和<code>dealloc</code>。<code>dealloc</code>就是析构函数。其构造函数相当于先调用<code>alloc</code>再<code>init</code>，说白了就是他把空间申请和变量初始化分的很清楚，<code>alloc</code>就是空间申请，<code>init</code>就是变量初始化，这俩通常是成对儿出现的。你问只<code>alloc</code>不<code>init</code>行不行，可以！没问题！只不过你的私有成员表示很郁闷：谁来给我们赋初值啊？</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><ul>
+<li><strong>构造函数</strong><br>也就是构造的时候，在objective-c中定义构造函数时不用你去申请空间，只是写好初始化方法<code>init</code>就好了</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (instanceType) init &#123;</span><br><span class="line">  [super init];  // 别忘了要把祖宗也都构造上</span><br><span class="line">  if(self)&#123;</span><br><span class="line">    // 需要初始化的东西</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>析构函数</strong><br>析构函数，在对象被释放之前，对象总要那么挣扎几下才会安心的去的。不过你也可以让你的对象没有任何想说的直接挂掉，这就可能会出现问题：这财产归谁啊？还是彻底不要了？不能扔那不管啊！ </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (void) dealloc &#123;</span><br><span class="line">  // 遗嘱</span><br><span class="line">  [super dealloc];  // 株连九族</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，这里超类的析构函数要最后调用。</p>
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><ul>
+<li><strong>构造函数</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ClassName* instance = [[ClassName alloc] init]; // 先构造再初始化</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果说你的构造函数不需要什么参数，直接走默认<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ClassName* instance = [ClassName new]; //  等价于上面的</span><br></pre></td></tr></table></figure></p>
+<p>如果你很奔放的不需要初始化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ClassName* instance = [ClassName alloc]; // 完全没问题！ 没毛病~</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>析构函数</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[instance dealloc];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>至此，在Objective-C中最基本的动态内存管理算是介绍完了。你要是不看后面的直接这么玩，没问题！</p>
+<p>那么问题来了：遇到复杂的情况，这种传统模式就很捉急。<br>比如我要在<code>指针A</code>中引用<code>空间M</code>，<code>引用B</code>也要引用<code>对象M</code>，<code>对象C</code>也来凑热闹引用了<code>对象M</code>。哇！这对象M简直是香饽饽。<code>A</code>说了：“这盘香饽饽是我做的，我要吃，谁最后吃完谁收拾剩饭”；<code>B</code>说了：“这盘香饽饽我要吃，谁最后吃完谁收拾剩饭”；<code>C</code>说：“我不吃，我就看看。”</p>
+<p>好，最后这盘香饽饽什么时候收拾？对应在程序里面也就是什么时候调用<code>[M dealloc]</code>？</p>
+<p>谁最后吃完谁收拾呗，说得好听！谁知道程序里面谁最后吃完啊，对应着用上面的方式<code>A</code> <code>B</code> <code>C</code>里面都引用了<code>M</code>，<code>A</code>和<code>B</code>谁最后吃完那完全是看心情的，都任性的很呢！</p>
+<hr>
+<h2 id="引用计数管理"><a href="#引用计数管理" class="headerlink" title="引用计数管理"></a>引用计数管理</h2><p>引用计数是个好方法，能解决上面的香饽饽问题。也就是这种机制可以让程序知道到底是谁最后吃完了香饽饽。<br>其基本思想：用一个计数器，来一个吃香饽饽的就<code>+1</code>，吃完一个就<code>-1</code>，减到0了就释放。</p>
+<h4 id="手动引用计数（MRC-Manual-Reference-Counting）"><a href="#手动引用计数（MRC-Manual-Reference-Counting）" class="headerlink" title="手动引用计数（MRC, Manual Reference Counting）"></a>手动引用计数（MRC, Manual Reference Counting）</h4><p>或称为MRR（Manual Retain Release）。这算是最基本的引用计数操作。</p>
+<ul>
+<li><strong><code>+1</code></strong><br>对应的方法就是<code>retain</code>。但除此之外，由<code>alloc</code>、<code>new</code>、<code>copy</code>、<code>mutableCopy</code>这样直接生成对象的方法会直接让引用计数自动+1，加给谁？就是<code>=</code>左边的那位。<br>所以像前面的这种<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ClassName* instance = [[ClassName alloc] init];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>instance所指向的对象引用计数会直接+1。<br>你说我没有左边那位是不是也要+1呀？是！<br>如果你直接这样写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[ClassName alloc] init]</span><br></pre></td></tr></table></figure></p>
+<p>等你去编译的时候，编译器就给你改成<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id tmp = [[ClassName alloc] init]</span><br><span class="line">[tmp autorelease]</span><br></pre></td></tr></table></figure></p>
+<p>是的，他就偏往<code>=</code>左边临时放一位，<code>id</code>相当于C语言中的<code>void *</code>指针，这里不谈。<code>autorelease</code>方法本篇也不谈，你可以暂时把它看成<code>release</code>也就是我下面<strong><code>-1</code></strong>部分要说的。<br>就像前面的香饽饽情形中，香饽饽M是A做的，A和B都要吃，C只看不吃：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ClassName* pointerA = [[ClassName alloc] init];  // 引用计数+1</span><br><span class="line">ClassName* pointerB = [pointerA retain];  // 引用计数+1</span><br><span class="line">ClassName* pointerC = pointerA;  // 引用计数不改变，C：我就静静的看着你们吃</span><br></pre></td></tr></table></figure></p>
+<p>引用计数为2，也就是有两位正在享用香饽饽。</p>
+<ul>
+<li><strong><code>-1</code></strong><br>吃完了，就别直接收拾了，得看看其他人还有没有吃完是我们中华民族的传统美德，为了经这种美德延续下去，你调用个<code>release</code>就行啦（但别忘了，赋nil）。<br>A吃完了：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[instanceA release];  // 引用计数-1</span><br><span class="line">instanceA = nil;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>B吃完了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[instanceB release];  // 引用计数-1</span><br><span class="line">instance = nil;</span><br></pre></td></tr></table></figure></p>
+<p>当引用计数减为0时，就释放空间，也就是收拾剩饭。<br>为什么要后面赋nil：因为release之后，指针还是指向那片空间，如果等那个空间被释放了，一不小心又通过那个指针（这时这个指针有了一个响当当的名字：悬垂指针，详见注释2）访问了一下那片空间，那就很危险了。如果那片被回收的区域没有被其他程序覆写，那还好，你可能还侥幸能访问到那里的东西。但如果那片空间被其他人覆写了，这就是非法访问了，非法访问的后果就是crash!<br>C说了：我要搞事情！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[instanceC release];</span><br><span class="line">instanceC = nil;  // 搞完事就跑路真刺激！</span><br></pre></td></tr></table></figure></p>
+<p>行不行？还真可以！无论是编译阶段还是运行时他都不会报错的。这就等于C在饭局中冒充一个用餐的喊了句：我吃完啦！最后计数器一算：噢，客人都吃完走了，可以收拾饭桌了。结果最后真正还在吃的那位：MMP!<br>程序中是这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[instanceA release];  // 引用计数-1</span><br><span class="line">instanceA = nil;</span><br><span class="line">[instanceC release];  // 引用计数-1，此时引用计数已经为0了，自动调用dealloc</span><br><span class="line">instanceB = nil;</span><br><span class="line">[instanceB release];  // 很有可能还没执行到这一步程序已经崩溃了，因为B先生开始发疯：我的饭呢？！</span><br><span class="line">instanceC = nil;</span><br></pre></td></tr></table></figure></p>
+<p>就算B先生恰好也吃完了，在他说“我吃完了”的时候，发现没人鸟他了，这时B先生又疯了！所以程序又崩了。<br>这个疯了在程序里指的就是B先生变成了悬垂指针。</p>
+<p>另外，如果你想查看引用计数就调用<code>[instance retainCount]</code>，它会返回一个无符号整形，也就是引用计数的值。<br>你会发现当减到0的时候，如果你再调用<code>retainCount</code>的话，其值仍然为1，首先你这样做是非常危险的，因为他已经被释放了，你现在是在访问悬垂指针。如果能访问到值而没有崩溃当然是因为那块被回收的空间还没有被覆写，其次它的计数值没有变为0是因为没有必要了，这块空间已经被释放了，也没必要去给它计算多一次，而且这个1本是你不该知道的！</p>
+<p>至此，你可以发现MRC还是很屌的，只要你别犯贱，一般不会出现什么问题了，也完美解决了之前的香饽饽问题。</p>
+<h4 id="自动引用计数（ARC-Automatic-Reference-Counting）"><a href="#自动引用计数（ARC-Automatic-Reference-Counting）" class="headerlink" title="自动引用计数（ARC, Automatic Reference Counting）"></a>自动引用计数（ARC, Automatic Reference Counting）</h4><p>自动引用计数的出现减少了很多的内存管理代码，从而交给编译器自动去做。是的，这玩意儿是编译器层面的（但不完全是，也需要运行时的帮助，但认识它，透过它编译时所做的事就够了）。</p>
+<h5 id="所有权修饰符"><a href="#所有权修饰符" class="headerlink" title="所有权修饰符"></a>所有权修饰符</h5><ul>
+<li><strong><code>__strong</code></strong><br>强修饰符，默认修饰。修饰对象属性的时候写成<code>@property(strong)</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    id creator = [[NSObject alloc] init];  // 这个也是__strong修饰的，默认修饰</span><br><span class="line">    id __strong strongRef = creator;</span><br><span class="line">    // something else</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>相当于MRC中的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    id creator = [[NSObject alloc] init];</span><br><span class="line">    id strongRef = [creator retain];</span><br><span class="line">    // something else</span><br><span class="line">    [strongRef release];</span><br><span class="line">    [creator release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>意思就是，只要是给我strong引用赋值的，我都会retain那个对象。<br>而且那个<code>__strong</code>可以不写出来，因为它是在ARC下默认的所有权修饰符。<br>而且在这个修饰的变量在其生命周期结束后，会自动调用release。并不是动态的调用<code>release</code>，而是ARC会帮你在那个生命周期结束的位置自动写上<code>release</code>。</p>
+<ul>
+<li><strong><code>__weak</code></strong><br>弱修饰符，修饰对象属性的时候写成<code>@property(weak)</code>。带有此修饰符的指针变量所指向的对象被释放后自动赋<code>nil</code>。本修饰符在iOS4以上支持，若是之前的版本就用<code>__unsafe_unretain</code>修饰符代替（对应的属性修饰为<code>@property(assign)</code>）。但是它不会自动赋<code>nil</code>，所以它是不安全的。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    id creator = [[NSObject alloc] init];</span><br><span class="line">    id __weak weakRef = creator;</span><br><span class="line">    // something else</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>相当于MRC中的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    id creator = [[NSObject alloc] init];</span><br><span class="line">    id weakRef = creator;</span><br><span class="line">    // something else</span><br><span class="line">    weakRef = nil;  // 若引用所指向的对象的引用计数为0后就自动赋nil</span><br><span class="line">    [creator release];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>总的来说就是ARC帮你在编译时写了MRC要写的东西，MRC中的那些方法在ARC是不支持的（<code>retain</code>、<code>release</code>、<code>autorelease</code>、<code>dealloc</code>、<code>retainCount</code>不可以人为调用，因为ARC已经帮你写好了）。所以并不是说有了ARC就完全不用担心内存管理，有些需要在运行时管理的内存还是不能太依赖ARC。它只是帮你从那些一般的MRC操作中释放出来。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>可以发现从传统到MRC再到ARC是一层一层进化而来，在传统上添加一个引用计数器就是MRC，编译器接手引用计数就变成了ARC。<br>除此之外上述之外，还有autoreleasepool，本文不提。有兴趣的朋友自行翻资料吧，这篇文章只是在Objective-C内存管理方面带你入个门。</p>
+<hr>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li>野指针(Wild Pointer)：在声明指针变量时，有些开发语言并不会帮你自动赋nil。所以这个指针可能在刚声明的时候是指向一个迷の区域的。这样的指针就是野指针。</li>
+<li>悬垂指针(Dangling Pointer)：悬垂指针就是本指向一个曾经有对象（该指针曾经指向的对象）的空间，但现在是被回收的空间。</li>
+<li>内存泄漏(Memory Leak)：内存泄漏指的是内存中存在一些对象实体，他们占用空间，却没有任何指针变量指向他们，所以他们不会被释放掉。</li>
+</ol>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        </p><p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/jessehao.github.io/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
