@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言读到这篇，你最好已经有了一些基础知识和单片机入门编程能力，接下来聊聊中断（Interrupt）。用程序员的角度说，单片机的中断机制有点像面向对象中的事件，只不过单片机中的这些“事件”是由其他的部件引发。  什么是中断简而言之，就是打断处理器且让其处理那个打断它的事件。就好像你在玩电脑，然后家里的暖壶响了，这时你会放下眼前的事，去厨房关火。水开了、壶响了就是中断的触发，关掉煤气灶就是中断要处理时">
+<meta name="keywords" content="scm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扯会儿单片机开发：中断">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2016/07/01/scm-develop-interrupt/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="前言读到这篇，你最好已经有了一些基础知识和单片机入门编程能力，接下来聊聊中断（Interrupt）。用程序员的角度说，单片机的中断机制有点像面向对象中的事件，只不过单片机中的这些“事件”是由其他的部件引发。  什么是中断简而言之，就是打断处理器且让其处理那个打断它的事件。就好像你在玩电脑，然后家里的暖壶响了，这时你会放下眼前的事，去厨房关火。水开了、壶响了就是中断的触发，关掉煤气灶就是中断要处理时">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-f071137ff77f6c8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-01T06:59:42.346Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="扯会儿单片机开发：中断">
+<meta name="twitter:description" content="前言读到这篇，你最好已经有了一些基础知识和单片机入门编程能力，接下来聊聊中断（Interrupt）。用程序员的角度说，单片机的中断机制有点像面向对象中的事件，只不过单片机中的这些“事件”是由其他的部件引发。  什么是中断简而言之，就是打断处理器且让其处理那个打断它的事件。就好像你在玩电脑，然后家里的暖壶响了，这时你会放下眼前的事，去厨房关火。水开了、壶响了就是中断的触发，关掉煤气灶就是中断要处理时">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1704151-f071137ff77f6c8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2016/07/01/scm-develop-interrupt/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>扯会儿单片机开发：中断 | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2016/07/01/scm-develop-interrupt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">扯会儿单片机开发：中断
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-07-01 22:29:00" itemprop="dateCreated datePublished" datetime="2016-07-01T22:29:00+08:00">2016-07-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 14:59:42" itemprop="dateModified" datetime="2019-03-01T14:59:42+08:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/扯会儿单片机开发/" itemprop="url" rel="index"><span itemprop="name">扯会儿单片机开发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>读到这篇，你最好已经有了一些<a href="http://www.jianshu.com/p/8141a366cfb1" target="_blank" rel="noopener">基础知识</a>和<a href="http://www.jianshu.com/p/88dfc09e7403" target="_blank" rel="noopener">单片机入门编程</a>能力，接下来聊聊中断（<a href="https://en.wikipedia.org/wiki/Interrupt" target="_blank" rel="noopener">Interrupt</a>）。<br>用程序员的角度说，单片机的中断机制有点像面向对象中的<a href="https://msdn.microsoft.com/zh-cn/library/awbftdfh.aspx" target="_blank" rel="noopener">事件</a>，只不过单片机中的这些“事件”是由其他的部件引发。</p>
+<hr>
+<h2 id="什么是中断"><a href="#什么是中断" class="headerlink" title="什么是中断"></a>什么是中断</h2><p>简而言之，就是打断处理器且让其处理那个打断它的事件。就好像你在玩电脑，然后家里的暖壶响了，这时你会放下眼前的事，去厨房关火。水开了、壶响了就是中断的触发，关掉煤气灶就是中断要处理时的程序。当你关了火就可以继续回来做眼下的事情。中断也是这个道理。</p>
+<h4 id="操作系统中断"><a href="#操作系统中断" class="headerlink" title="操作系统中断"></a>操作系统中断</h4><blockquote>
+<p>操作系统的发展过程，大体上就是一个想方设法不断提高资源利用率的过程，而提高资源利用率就需要在程序并未使用某种资源的时候，把它对那种资源的占有权释放掉，而这个行为，就需要通过中断实现。</p>
+</blockquote>
+<p>从上述引段中可以看出，操作系统中的中断机制引入的初衷就是为了提高多道程序设计的资源利用率的。</p>
+<h4 id="单片机中断"><a href="#单片机中断" class="headerlink" title="单片机中断"></a>单片机中断</h4><p>在单片机中，换汤不换药，也主要是为了处理发生的中断事件而设定的</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-f071137ff77f6c8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>单片机开始运行后，会开始执行主程序中的代码，当遇到中断时，单片机就会暂停读取主程序代码，转而读取中断代码，当执行完中断代码后，继续手下的主程序代码。<br>大部分单片机并没有操作系统，比如笔者最近把玩的51系列。所以也谈不上他们会有多道程序设计，更不用说进程那些概念。因为单片机的大部分用途都是只运行单一一个程序就够了。</p>
+<hr>
+<h2 id="52单片机"><a href="#52单片机" class="headerlink" title="52单片机"></a>52单片机</h2><p>说回到52单片机，也就是stc89c52或at89c52之类的。</p>
+<h4 id="类别"><a href="#类别" class="headerlink" title="类别"></a>类别</h4><p>它有三种中断类型</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>外部中断</td>
+<td>比较通用，外部中断引脚收到信号后发生中断</td>
+</tr>
+<tr>
+<td>串口中断</td>
+<td>串口RXD引脚收到信号后发生中断，往往是接受够一个字节后触发</td>
+</tr>
+<tr>
+<td>定时器中断</td>
+<td>每当定时器计数溢出后触发</td>
+</tr>
+</tbody>
+</table>
+<p>共6个中断源，其中2个外部中断源，3个定时器中断源，1个串口中断源。这里仅仅讨论52单片机内的中断设置。</p>
+<h4 id="相关寄存器"><a href="#相关寄存器" class="headerlink" title="相关寄存器"></a>相关寄存器</h4><p>中断涉及到两个寄存器，一个是中断允许寄存器（IE，Interrupt Enablement），另一个是中断优先级寄存器（IP，Interrupt Priority）。<br><strong>中断允许寄存器（IE）</strong><br>各中断源的开关，字节地址：A8H（reg52.h中已定义<code>sfr IE = 0xA8;</code>），可以位寻址（A8H~AFH），复位时全部清零。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">位序号</th>
+<th style="text-align:center">位地址</th>
+<th style="text-align:center">位符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">D7</td>
+<td style="text-align:center">AFH</td>
+<td style="text-align:center">EA</td>
+<td>全局中断允许位，就像电闸上总闸，是所有开启任何中断的前提，若关闭，则关闭所有中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D6</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">–</td>
+<td>这一位为空，无用。</td>
+</tr>
+<tr>
+<td style="text-align:center">D5</td>
+<td style="text-align:center">ADH</td>
+<td style="text-align:center">ET2</td>
+<td>定时器2中断允许位，若打开则允许定时器2溢出后引发中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D4</td>
+<td style="text-align:center">ACH</td>
+<td style="text-align:center">ES</td>
+<td>串口中断允许位，若打开则允许RXD引脚接受到1个字节的信息后引发中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D3</td>
+<td style="text-align:center">ABH</td>
+<td style="text-align:center">ET1</td>
+<td>定时器1中断允许位，若打开则允许定时器1溢出后引发中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D2</td>
+<td style="text-align:center">AAH</td>
+<td style="text-align:center">EX1</td>
+<td>外部中断1中断允许位，若打开则允许外部中断引脚接收信号后引发中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D1</td>
+<td style="text-align:center">A9H</td>
+<td style="text-align:center">ET0</td>
+<td>定时器0中断允许位，若打开则允许定时器0溢出后引发中断。</td>
+</tr>
+<tr>
+<td style="text-align:center">D0</td>
+<td style="text-align:center">A8H</td>
+<td style="text-align:center">EX0</td>
+<td>外部中断0中断允许位，若打开则允许外部中断引脚接收信号后引发中断。</td>
+</tr>
+</tbody>
+</table>
+<p>以上全部位的值为1是打开，0是关。<br><strong>中断优先寄存器（IP）</strong><br>用于设定各中断源的优先级，字节地址B8H（reg52.h中已定义<code>sfr IP = 0xB8;</code>），可以位寻址（B8H~BFH），复位时全部清零。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">位序号</th>
+<th style="text-align:center">位地址</th>
+<th style="text-align:center">位符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">D7</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">–</td>
+<td>这一位为空，无用。</td>
+</tr>
+<tr>
+<td style="text-align:center">D6</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">–</td>
+<td>这一位为空，无用。</td>
+</tr>
+<tr>
+<td style="text-align:center">D5</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">–</td>
+<td>这一位为空，无用。</td>
+</tr>
+<tr>
+<td style="text-align:center">D4</td>
+<td style="text-align:center">BCH</td>
+<td style="text-align:center">PS</td>
+<td>串口中断优先级控制位。</td>
+</tr>
+<tr>
+<td style="text-align:center">D3</td>
+<td style="text-align:center">BBH</td>
+<td style="text-align:center">PT1</td>
+<td>定时器1中断优先级控制位。</td>
+</tr>
+<tr>
+<td style="text-align:center">D2</td>
+<td style="text-align:center">BAH</td>
+<td style="text-align:center">PX1</td>
+<td>外部中断1优先级控制位。</td>
+</tr>
+<tr>
+<td style="text-align:center">D1</td>
+<td style="text-align:center">B9H</td>
+<td style="text-align:center">PT0</td>
+<td>定时器0中断优先级控制位。</td>
+</tr>
+<tr>
+<td style="text-align:center">D0</td>
+<td style="text-align:center">B8H</td>
+<td style="text-align:center">PX0</td>
+<td>外部中断0优先级控制位。</td>
+</tr>
+</tbody>
+</table>
+<p>以上各位值为1时为高优先级，0位低优先级。<br>52单片机中，供用户设置的有两种优先级，高与低。他们遵循以下<strong>三条规则：</strong></p>
+<p><strong>1.低优先级中断源可被高优先级中断源中断，高优先级中断源不能被任何中断源中断。<br>2.一种不论高低的中断源一旦得到响应，与之同级的中断源不可中断它。<br>3.当同时收到几个同优先级的中断源时，响应优先级按其默认中断级别执行。</strong></p>
+<h4 id="各中断源默认中断级别及中断序号"><a href="#各中断源默认中断级别及中断序号" class="headerlink" title="各中断源默认中断级别及中断序号"></a>各中断源默认中断级别及中断序号</h4><table>
+<thead>
+<tr>
+<th>中断源</th>
+<th style="text-align:center">默认中断级别</th>
+<th style="text-align:center">序号（C语言）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>外部中断0</td>
+<td style="text-align:center">1st</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td>定时器0中断</td>
+<td style="text-align:center">2nd</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td>外部中断2</td>
+<td style="text-align:center">3rd</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td>定时器1中断</td>
+<td style="text-align:center">4th</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>串口中断</td>
+<td style="text-align:center">5th</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>定时器2中断</td>
+<td style="text-align:center">6th</td>
+<td style="text-align:center">5</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>1.《51单片机C语言教程》，郭天祥 著，电子工业出版社<br>2.《操作系统联考复习指导》，王道论坛 组编，电子工业出版社<br>3.《现代操作系统》，Andrew S. Tanenbaum 著，机械工业出版社<br>4.<a href="http://www.diangon.com/wenku/rd/danpianji/201412/00015424.html" target="_blank" rel="noopener">单片机中断的IE和IP寄存器</a>，电工学习网</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/scm/" rel="tag"># scm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2016/06/09/scm-practice-proteus-keil-firstLED/" rel="next" title="51单片机实战：Proteus、Keil入门及点亮一个虚拟LED">
+                <i class="fa fa-chevron-left"></i> 51单片机实战：Proteus、Keil入门及点亮一个虚拟LED
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/01/14/scm-practice-timer-and-LED/" rel="prev" title="51单片机实战：定时器与数码管的应用">
+                51单片机实战：定时器与数码管的应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

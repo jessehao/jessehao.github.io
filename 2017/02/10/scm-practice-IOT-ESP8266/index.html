@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章框架   前言扯单一周目BOSS出现！请速速讨伐！ESP8266是我第一个，也是唯一一个接触过的无线网络模块，我非常喜欢！大部分网上的教程都是ARM架构单片机配用ESP8266。我比较抠门，给大家上51版的。我记得当时和老板承诺可以做成无线通信的时候我也不是很确定，心里一直打鼓。好在最后做出来了，很有成就感！所以今天的代码案例是我把我之前在公司写的项目代码简化之后分享给大家的。虽然结构有点恶心">
+<meta name="keywords" content="scm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机实战：物联网初步のESP8266无线网络模块">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2017/02/10/scm-practice-IOT-ESP8266/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="文章框架   前言扯单一周目BOSS出现！请速速讨伐！ESP8266是我第一个，也是唯一一个接触过的无线网络模块，我非常喜欢！大部分网上的教程都是ARM架构单片机配用ESP8266。我比较抠门，给大家上51版的。我记得当时和老板承诺可以做成无线通信的时候我也不是很确定，心里一直打鼓。好在最后做出来了，很有成就感！所以今天的代码案例是我把我之前在公司写的项目代码简化之后分享给大家的。虽然结构有点恶心">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-609b22e6e121c72c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-ed82df554d71a4d5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-75dc38c117bf8676.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-f346ebbe339d23b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-0a3824357b24fa41.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-8de7324867b0290c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-21ad94ea7f5929be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-71bbf7e81bb6b7ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-af9a8c15d6ca1fb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-5645235d3f6539ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-b72b32c5bda2e51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-b72b32c5bda2e51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-2212aea56d801257.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-80e5b4b817077297.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-51033594c9bd5321.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-88481580b7552b82.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-d191d56c414e2e4a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-5e63ca7e86fb3488.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-01T07:26:05.088Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="51单片机实战：物联网初步のESP8266无线网络模块">
+<meta name="twitter:description" content="文章框架   前言扯单一周目BOSS出现！请速速讨伐！ESP8266是我第一个，也是唯一一个接触过的无线网络模块，我非常喜欢！大部分网上的教程都是ARM架构单片机配用ESP8266。我比较抠门，给大家上51版的。我记得当时和老板承诺可以做成无线通信的时候我也不是很确定，心里一直打鼓。好在最后做出来了，很有成就感！所以今天的代码案例是我把我之前在公司写的项目代码简化之后分享给大家的。虽然结构有点恶心">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1704151-609b22e6e121c72c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2017/02/10/scm-practice-IOT-ESP8266/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>51单片机实战：物联网初步のESP8266无线网络模块 | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2017/02/10/scm-practice-IOT-ESP8266/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">51单片机实战：物联网初步のESP8266无线网络模块
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-02-10 16:44:00" itemprop="dateCreated datePublished" datetime="2017-02-10T16:44:00+08:00">2017-02-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 15:26:05" itemprop="dateModified" datetime="2019-03-01T15:26:05+08:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/扯会儿单片机开发/" itemprop="url" rel="index"><span itemprop="name">扯会儿单片机开发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="文章框架"><a href="#文章框架" class="headerlink" title="文章框架"></a>文章框架</h2><p><img src="http://upload-images.jianshu.io/upload_images/1704151-609b22e6e121c72c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="文章框架"></p>
+<hr>
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>扯单一周目BOSS出现！请速速讨伐！<br>ESP8266是我第一个，也是唯一一个接触过的无线网络模块，我非常喜欢！大部分网上的教程都是ARM架构单片机配用ESP8266。我比较抠门，给大家上51版的。<br>我记得当时和老板承诺可以做成无线通信的时候我也不是很确定，心里一直打鼓。好在最后做出来了，很有成就感！所以今天的代码案例是我把我之前在公司写的项目代码简化之后分享给大家的。虽然结构有点恶心，但应该还是入得了眼的。<br>如果有没看懂的地方，大家评论区告诉我。</p>
+<h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>利用ESP8266芯片，通过无线网络同电脑建立TCP连接。接收电脑传来的消息并显示在LCD上。</p>
+<blockquote>
+<p>每条信息以<code>\</code>结尾。<br>每条信息字符数不超过32。<br>信息内容只能是ASCII表内的字符。</p>
+</blockquote>
+<hr>
+<h2 id="清单"><a href="#清单" class="headerlink" title="清单"></a>清单</h2><h4 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h4><h5 id="学习板"><a href="#学习板" class="headerlink" title="学习板"></a>学习板</h5><ul>
+<li><p><strong>简介</strong><br>由于这次要用到WIFI模块，没法用Proteus模拟，所以就上真家伙。<br>自己焊板子就太麻烦了，所以就买学习板（其实我不会焊）。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-ed82df554d71a4d5.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="QX-MINI51"><br>这是我入的学习板，你也可以入其他的，如果把握不大就跟我入一样的。<br>这个是我在淘宝上小挑了一阵子选的板子：QX-MINI51。尺寸不大不小，想玩的基本都有。配备的单片机是STC89C52。</p>
+<p><a href="https://item.taobao.com/item.htm?spm=a1z10.1-c-s.w4004-6543279843.5.cC5KBR&amp;id=41542952683" target="_blank" rel="noopener">淘宝链接</a></p>
+</li>
+<li><p><strong>电路</strong><br>下面是QX-MINI51在本节会用到的电路图<br><img src="http://upload-images.jianshu.io/upload_images/1704151-75dc38c117bf8676.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="STC89C52"><br>使用89C52芯片，和我们之前用的单片机一样。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-f346ebbe339d23b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="供电&amp;USB串口"><br><strong>CH340</strong>芯片是用于普通串口和USB转换的，其上的<code>RXD</code>为串口输入，<code>TXD</code>为串口输出。<code>UD+</code>和<code>UD-</code>对应USB数据线。<br>虽说是用了USB，其实和普通串口通信线用法一致，只是人家成品方便我们使用封装成了USB。这里不深究。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-0a3824357b24fa41.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="流水灯"><br>流水灯在本节中的角色是辅助调试（具体的看后面），这里有用的信息就是让你知道这8个流水灯接哪了。</p>
+</li>
+</ul>
+<h5 id="ESP8266"><a href="#ESP8266" class="headerlink" title="ESP8266"></a>ESP8266</h5><ul>
+<li><strong>简介</strong><br>主角，简而言之就是Wi-Fi模块，属于网络层以上的设备。拥有MAC地址和IP地址，支持UDP和TCP。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-8de7324867b0290c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ESP8266"><br>这款的型号是ESP8266-01，其他的和QX-MINI51配合使用不太方便。<br><a href="https://detail.tmall.com/item.htm?spm=a1z10.3-b.w4011-3079905380.27.lQdNY6&amp;id=522820720009&amp;rn=8960987bc1c2fb5aa8a9a66a9c6e179b&amp;abbucket=8" target="_blank" rel="noopener">淘宝链接</a></li>
+<li><strong>参数</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">型号</th>
+<th style="text-align:center">主芯片</th>
+<th style="text-align:center">无线标准</th>
+<th style="text-align:center">工作电压</th>
+<th style="text-align:center">安全机制</th>
+<th style="text-align:center">支持模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ESP8266-01</td>
+<td style="text-align:center">ESP8266</td>
+<td style="text-align:center">IEEE 802.11b/g/n</td>
+<td style="text-align:center">3.3V</td>
+<td style="text-align:center">WEP/WPA-PSK/WPA2-PSK</td>
+<td style="text-align:center">STA、AP、STA+AP</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>STA 模式：ESP8266模块通过路由器连接互联网，手机或电脑通过互联网实现对设备的远程控制。<br>AP 模式：ESP8266模块作为热点，实现手机或电脑直接与模块通信，实现局域网无线控制。<br>STA+AP 模式：两种模式的共存模式，即可以通过互联网控制可实现无缝切换，方便操作。</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-21ad94ea7f5929be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="引脚图"><br>上图对8个针脚进行说明。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">UTXD</th>
+<th style="text-align:center">GND</th>
+<th style="text-align:center">CH_PD</th>
+<th style="text-align:center">GPIO2</th>
+<th style="text-align:center">GPIO16</th>
+<th style="text-align:center">GPIO0</th>
+<th style="text-align:center">VCC</th>
+<th style="text-align:center">URXD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">发送</td>
+<td style="text-align:center">接地</td>
+<td style="text-align:center">高电平工作</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">电源</td>
+<td style="text-align:center">接收</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>本例只用到这五个引脚（画“\”的不用），其他引脚的说明资料请自行到淘宝链接处下载。</p>
+<ul>
+<li><p><strong>AT指令</strong><br>操作ESP8266芯片是靠AT指令的，类似之前的操作LCD1602（《<a href="http://www.jianshu.com/p/c994aa660874" target="_blank" rel="noopener">51单片机实战：液晶显示器のLCD1602</a>》）。操作LCD1602的指令都是一个字节的十六进制码，比较难记和理解。AT指令是字符串形式的指令，一般都是单词缩写，对可笑的人类比较友好。<br>之前和LCD1602交互是靠并口传输，而这次是用串口传输（串口传输简例：《<a href="http://www.jianshu.com/p/ce7b8f409585" target="_blank" rel="noopener">51单片机实战：与计算机异步串行通信</a>》），所以这次的Wi-Fi通信是建立在串口通信基础上的。</p>
+<p><a href="http://pan.baidu.com/s/1mi9FwX6" target="_blank" rel="noopener">AT指令集下载链接</a><br><a href="http://pan.baidu.com/s/1o7F0HUM" target="_blank" rel="noopener">AT指令使用示例下载链接</a></p>
+</li>
+<li><p><strong>波特率</strong><br>注意，这个模块的默认波特率是<code>115200</code>，<strong>本例也是根据这个波特率进行演示的</strong>。若想改变波特率请使用以下语句进行修改：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AT+CIOBAUD=&lt;baudrate&gt;,&lt;databits&gt;,&lt;stopbits&gt;,&lt;parity&gt;,&lt;flow control&gt;</span><br></pre></td></tr></table></figure>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AT+CIOBAUD=9600,8,1,0,0</span><br></pre></td></tr></table></figure>
+<h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">程序</th>
+<th style="text-align:left">说明</th>
+<th style="text-align:center">下载</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">UartAssist</td>
+<td style="text-align:left">串口调试助手，用来给单片机发送消息</td>
+<td style="text-align:center"><a href="http://pan.baidu.com/s/1mig8GE8" target="_blank" rel="noopener">度娘网盘</a></td>
+</tr>
+<tr>
+<td style="text-align:center">NetAssist</td>
+<td style="text-align:left">网络调试助手，在电脑端建立TCP连接与单片机的ESP8266进行通信</td>
+<td style="text-align:center"><a href="http://pan.baidu.com/s/1geHGPIr" target="_blank" rel="noopener">度娘网盘</a></td>
+</tr>
+<tr>
+<td style="text-align:center">STC-ISP</td>
+<td style="text-align:left">STC单片机工具集，很强大，可烧录程序，可串口调试等等</td>
+<td style="text-align:center"><a href="http://pan.baidu.com/s/1bpvKAUN" target="_blank" rel="noopener">度娘网盘</a></td>
+</tr>
+<tr>
+<td style="text-align:center">CH340驱动</td>
+<td style="text-align:left">CH340的USB驱动，如果没有这个驱动，你的电脑可能识别不到单片机（识别到CH340就相当于识别到单片机的串口。）</td>
+<td style="text-align:center"><a href="http://pan.baidu.com/s/1o879y8U" target="_blank" rel="noopener">度娘网盘</a></td>
+</tr>
+<tr>
+<td style="text-align:center">51单片机波特率初值计算工具</td>
+<td style="text-align:left">用于计算在各种波特率和晶振频率等参数下计时器的初值，属于辅助工具，省的还得算。</td>
+<td style="text-align:center"><a href="http://pan.baidu.com/s/1dF5jVod" target="_blank" rel="noopener">度娘网盘</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><p>在开始用单片机直接和无线模块通信之前，首先要绕过单片机直接和无线模块通信以确定其可以使用和接入默认网络（接入一个热点后，模块每次断电后启动都会自动连接该热点），这样可以让单片机少做很多事情（要知道我们用的是51单片机，硬件资源极其有限，能省则省）。</p>
+<ul>
+<li><p><strong>TXD/RXD反接</strong><br>首先要绕过单片机直接给ESP8266下指令，就要用电脑的串口。但ESP-01是针脚接口，所以我们可以利用QX-MINI51上的针脚和USB接口。</p>
+<p>回看前面QX-MINI51的主控芯片和USB的电路图，可以发现，单片机的串口引脚是被并联式的暴露再外的，分别为：<code>P30 - P31</code>和<code>USB</code>，前者为针脚接口，后者为USB接口。且它们的RXD和TXD的数据信息是一摸一样的，注意并不是两个独立的串口，是同一个串口。比方说，单片机要往出发送一个1，P30针脚和USB都会是往出发送一个1。</p>
+<p>所以我们利用这个特点，将ESP8266的TXD接到P31（单片机的TXD），RXD接到P30（单片机的RXD），这样就等于让ESP8266直接和USB打交道，也就是和电脑直接打交道了。</p>
+<p>为什么叫反接，我一般管RXD对TXD叫正接。嗯…<br><img src="http://upload-images.jianshu.io/upload_images/1704151-71bbf7e81bb6b7ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="接线图"><br>强势秀一波画工！<br>我觉得应该可以看得懂吧，ESP8266的引脚说明请看前面的引脚图。看<strong>红色号码</strong>对应接线，其中4、5、6号引脚不用。</p>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-af9a8c15d6ca1fb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="实物图"><br>这个图就很难看出线是怎么连的了，所以你要忍受我丑陋的画工。</p>
+<ul>
+<li><strong>接入网络</strong><br>打开串口调试助手，调好参数<br><img src="http://upload-images.jianshu.io/upload_images/1704151-5645235d3f6539ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="串口调试助手，设置参数"><br>其中串口号你连的哪个串口就设置哪个串口号，我是连的COM3。<br>另一个要注意的就是波特率要115200（ESP-01的默认波特率，也可以统一改为9600）。<br>打开串口后，给开发板上电。你的串口调试助手会有信息出来（文本显示，不要十六进制显示）。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?諄MEM CHECK FAIL!!!</span><br><span class="line">d&#123;$弬s</span><br><span class="line">Ai-Thinker Technology Co. Ltd.</span><br><span class="line"></span><br><span class="line">invalid</span><br></pre></td></tr></table></figure>
+<p>显示的信息类似上面，你可以先给个测试命令<code>AT</code>看看是否可以接受指令</p>
+<blockquote>
+<p>注意！每个指令后要跟<strong>回车</strong>再发送！</p>
+</blockquote>
+<p>如果返回<code>OK</code>则说明指令可以被接收并识别。</p>
+<p>如果下面的指令都会返回<code>ERROR</code>（在没有给错指令的情况下），可以尝试<code>AT+RST</code>重启模块。</p>
+<p><strong>1. 更改模式</strong><br>指令：<code>AT+CWMODE?</code><br>一般情况下，第一次使用会返回<code>2</code>，也就是AP模式，我们不用它发热点，所以要改回Station模式（模式1）。</p>
+<p>指令：<code>AT+CWMODE?</code><br>一般情况下，第一次使用会返回<code>2</code>，也就是AP模式，我们不用它发热点，所以要改回Station模式（模式1）。</p>
+<p>指令：<code>AT+CWMODE=1</code><br>返回：<code>OK</code>则成功</p>
+<p><strong>2. 接入热点（连Wi-Fi）</strong><br>指令：<code>AT+CWJAP=&lt;SSID&gt;,&lt;Password&gt;</code><br>参数：<ssid>处填写热点名称，<password>处填写密码。两者都要用双引号括起来。<br>例如：<code>AT+CWJAP=&quot;CMCC&quot;,&quot;123456&quot;</code></password></ssid></p>
+<p>指令：<code>AT+CWJAP=&lt;SSID&gt;,&lt;Password&gt;</code><br>参数：<ssid>处填写热点名称，<password>处填写密码。两者都要用双引号括起来。<br>例如：<code>AT+CWJAP=&quot;CMCC&quot;,&quot;123456&quot;</code></password></ssid></p>
+<p>返回：<code>WIFI CONNECTED</code>：连接到热点<br>返回：<code>WIFI GOT IP</code>：分配到IP，走到这一步，就算已经连入到热点了。</p>
+<p>如果忘记SSID了，想看一下可以使用下面的指令，列出广播的SSID（隐藏的不会显示）。<br>指令：<code>AT+CWLAP</code></p>
+<p><strong>3. 连接TCP服务器</strong><br>首先打开NetAssist，设置TCP Server，然后建立连接（注意防火墙）。注意，Server必须在Client所在内网或其外网（我的是在同一个内网）。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-b72b32c5bda2e51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="网络调试助手"></p>
+<p>首先打开NetAssist，设置TCP Server，然后建立连接（注意防火墙）。注意，Server必须在Client所在内网或其外网（我的是在同一个内网）。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-b72b32c5bda2e51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="网络调试助手"></p>
+<p>指令：<code>AT+CIPSTART=&lt;Type&gt;,&lt;DomainName&gt;,&lt;Port&gt;</code><br>参数：<type>处写TCP或UDP，<domainname>处写域名，<port>处写端口号。<br>本例：<code>AT+CIPSTART=&quot;TCP&quot;,&quot;192.168.1.110&quot;,1234</code><br>返回：</port></domainname></type></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CONNECT</span><br><span class="line"></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>说明连接成功。<br>在NetAssist中，数据接收框的下面有一个<strong>连接对象</strong>，点开后发现除了<code>All Connections</code>之外，多了一个客户，就确定客户连接到服务器了。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-2212aea56d801257.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NetAssist"><br>在下方文本框输入信息后发送，可在串口调试助手中看到ESP8266所接收到的信息<br>UartAssist收到的信息：<code>+IPD,10:Hello 简书</code></p>
+<p>到这里就说明网络连接及建立TCP都可以顺利完成，在下面的单片机操作中就会变得方便很多。</p>
+<blockquote>
+<p>注意，ESP8266每次断电后重新上电，最多只会自动连到之前连接的热点，但不会自动连接到TCP服务器，所以，建立连接要交给单片机来做。</p>
+</blockquote>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ul>
+<li><p><strong>波特率</strong><br>本例要使用的波特率为115200的，不是9600。引申出来的问题就是：算初值（方法详见：<a href="http://www.jianshu.com/p/ce7b8f409585" target="_blank" rel="noopener">《51单片机实战：与计算机异步串行通信》</a> - 知识点 - 波特率 - 溢出率）。<br>手算真的很麻烦，因为在参数固定的情况下，算起来已经很烦了，更何况那些参数可能还会变得情况。<br>所以上神器：<br><img src="http://upload-images.jianshu.io/upload_images/1704151-80e5b4b817077297.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="初值计算器"></p>
+</li>
+<li><p><strong>反馈及识别</strong><br>我们要做的是让单片机在收到ESP8266回馈的<code>WIFI GOT IP</code>后发出连接TCP服务器的指令。<br>发送指令不用多说，只要记得在后面跟”换行（CR）”和”新行（NL）”字符就行（这两个是不一样的）。<br><strong>1. 关键字符配对</strong><br>如果是电脑程序的高级语言编程，这个问题就不存在了。但是我们给单片机写程序就要牢记它的一些点（<a href="http://www.jianshu.com/p/8141a366cfb1" target="_blank" rel="noopener">《扯会儿单片机开发：开始》</a>），比如硬件资源十分紧张。<br>一个是因为它存储空间很小，另一个是因为晶振太慢，所以我们要想办法缩减配对时间。因为单片机的使用往往很单一，所以策略都是根据情况来设定的。比如本例，单片机接收的回馈无非那么几种，所以我制定的策略就是关键字符配对。</p>
+<p>比如识别<code>WIFI GOT IP</code>，我只是别第一个字符<code>W</code>和第6个字符<code>G</code>，就说明我收到的就是这个回馈信息。如果收到第一个是<code>W</code>，只有这条指令的第六个字符是<code>G</code>，所以就可以确定。如果是出现干扰，可能性也是比较低的，我们的交互是在网络层的，下层也可以把出错的报文挡掉。</p>
+<p>总体来说还是蛮可靠的，如果你有更棒的方法，请在评论区告诉我，大家一起学习进步。</p>
+<p><strong>2. 利用流水灯</strong><br>上面就是理论工作，已经做得7788了。但实际经验告诉我，如果的代码哪里也出岔子了在51单片机开发中真的比较难发现，他不像高级程序语言可以报错，可以<code>try - catch</code>。但这个就别想了，所以我们要自己想办法，让他可以反馈我们的程序至少是正常运行的，这样可以节省很多时间。</p>
+<p>我在这里介绍的我的方法是利用LED，或成组的流水灯(更好)。承租的流水灯一般是8个，可以直接显示一个字节的信息，可能有人问为什么不用LCD？你若会LCD或者看过<a href="http://www.jianshu.com/p/c994aa660874" target="_blank" rel="noopener">《51单片机实战：液晶显示器のLCD1602》</a>就会发现，LCD本身的开发就有点复杂了。你很难保证这个子程序运行正常，更别提用它抓错了。只能是不推荐哈，我觉得不可靠。LED的话就很简单了，就是个关开，一般不会出错。</p>
+<p>QX-MINI51开发板上自带流水灯，你要是入的其他开发板，一般都是有的。如果没有，就单买LED回来（如果不知道去哪买，<a href="https://detail.tmall.com/item.htm?id=16510017655&amp;spm=a1z09.2.0.0.MFqVsV&amp;_u=9fjektg2576" target="_blank" rel="noopener">链接</a>）。</p>
+<p>我一般会怎么做呢，先让流水灯直接显示串口接收的数据，为了知道我们至少是能接收到东西的。然后利用上面的关键字符识别，收到<code>WIFI CONNECTED</code>亮一号灯，收到<code>WIFI GOT IP</code>亮二号灯，收到<code>CONNECT OK</code>亮三号灯。这样，根据灯亮灭的情况就能确定哪一步出了问题，然后定位到代码或者设置。</p>
+<p>还是那句话，如果你有更棒的方法，欢迎在评论区交流。</p>
+</li>
+</ul>
+<p>到这里就做完了所有理论上的准备工作，也就是理论上我们已经可以实现这个程序了，下面代码实现。</p>
+<hr>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>说下这次代码比较新颖的地方，一个是用到了<code>.c</code>和<code>.h</code>文件组合的模块形式，另一个是用到了<strong>函数指针</strong>（函数名也被括起来的那个）。前者这种写法是为了将各子功能模块化，<code>.h</code>文件里的内容相当于面向对象编程里的<code>public</code>，<code>.c</code>文件一个是实现<code>.h</code>内的函数，另一个就是隐藏函数和变量，相当于<code>private</code>。后者是用来充当高级语言中的“事件”，让函数调用变得更加灵活，其具体用法请自己查资料或者看相关C语言书籍。</p>
+<blockquote>
+<p>总而言之，这次的代码是<strong>模块化</strong>和<strong>事件化</strong>的，类似<strong>面向对象</strong>的编码风格。</p>
+</blockquote>
+<ul>
+<li><p><strong>准备</strong><br>因为用于通讯，所以我把ASCII内所有的特殊字符都写到一个头文件里。虽然本例只用到其中的几个，但以后重复利用这个头文件。</p>
+<p><strong><code>ASCII.h</code></strong></p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __ASCIIS__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __ASCIIS__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUL 0x00 <span class="comment">// NULL</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SOH 0x01 <span class="comment">// Start of Heading</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> STX 0x02 <span class="comment">// Start of Text</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ETX 0x03 <span class="comment">// End of Text</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EOT 0x04 <span class="comment">// End of Transmission</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ENQ 0x05 <span class="comment">// Enquiry</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ACK 0x06 <span class="comment">// Acknowledge</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BEL 0x07 <span class="comment">// Bell</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BS 0x08 <span class="comment">// Backspace</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HT 0x09 <span class="comment">// Horizontal Tab</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LF 0x0A <span class="comment">// Line Feed</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NL 0x0A <span class="comment">// New Line</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> VT 0x0B <span class="comment">// Vertical Tab</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FF 0x0C <span class="comment">// Form Feed</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NP 0x0C <span class="comment">// New Page</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CR 0x0D <span class="comment">// Carriage Return</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SO 0x0E <span class="comment">// Shift Out</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SI 0x0F <span class="comment">// Shift In</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DLE 0x10 <span class="comment">// Data Link Escape</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DC1 0x11 <span class="comment">// Device Control 1</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DC2 0x12 <span class="comment">// Device Control 2</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DC3 0x13 <span class="comment">// Device Control 3</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DC4 0x14 <span class="comment">// Device Control 4</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NAK 0x15 <span class="comment">// Negative Acknowledge</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SYN 0x16 <span class="comment">// Synchronous Idle</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ETB 0x17 <span class="comment">// End of Transmission Block</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CAN 0x18 <span class="comment">// Cancel</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> EM 0x19 <span class="comment">// End of Medium</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUB 0x1A <span class="comment">// Substitute</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ESC 0x1B <span class="comment">// Escape</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FS 0x1C <span class="comment">// File Separator</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GS 0x1D <span class="comment">// Group Separator</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> RS 0x1E <span class="comment">// Record Separator</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> US 0x1F <span class="comment">// Unit Separator</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SP 0x20 <span class="comment">// Space</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>LCD</strong><br>这里都是关于LCD1602显示器的主要代码，与文章<a href="http://www.jianshu.com/p/c994aa660874" target="_blank" rel="noopener">《51单片机实战：液晶显示器のLCD1602》</a>所讲的一样，这里就不给出注释了。</li>
+</ul>
+<p><strong><code>lcd1602.h</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __LCD1602__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __LCD1602__</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> bit BOOL;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeCmd</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> cmd)</span></span>;  <span class="comment">//写命令</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> dat)</span></span>;  <span class="comment">//写数据</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeLine</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> *line)</span></span>;  <span class="comment">//写行数据</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_init</span><span class="params">()</span></span>;  <span class="comment">//初始化</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delay</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> z)</span></span>;  <span class="comment">//粗略的延时器</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p><strong><code>lcd1602.c</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lcd1602.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LCD_CLEAR 0x01</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LCD_Display_Mode 0X38</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_OFF 0x08</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_NO_CURSOR 0x0c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_WITH_CURSOR_NO_BLINK 0x0e</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_WITH_CURSOR_BLINK 0x0f</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_BACK_STEP 0x04</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_NEXT_STEP 0x06</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_DISPLAY_MOVE_LEFT 0x07</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_DISPLAY_MOVE_RIGHT 0x05</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ALL_MOVE_LEFT 0x18</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ALL_MOVE_RIGHT 0x1c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CURSOR_MOVE_LEFT 0x10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CURSOR_MOVE_RIGHT 0x14</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FIRST_ROW 0x80</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SECOND_ROW FIRST_ROW+0x40</span></span><br><span class="line"></span><br><span class="line">sbit enable = P0^<span class="number">5</span>;</span><br><span class="line">sbit RS = P0^<span class="number">7</span>;</span><br><span class="line">sbit RW = P0^<span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delay</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> x,y;</span><br><span class="line">	<span class="keyword">for</span>(x=z;x&gt;<span class="number">0</span>;x--)</span><br><span class="line">		<span class="keyword">for</span>(y=<span class="number">220</span>;y&gt;<span class="number">0</span>;y--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeCmd</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> cmd)</span></span>&#123;</span><br><span class="line">	RS = <span class="number">0</span>;</span><br><span class="line">	P2 = cmd;</span><br><span class="line">	delay(<span class="number">5</span>);</span><br><span class="line">	enable = <span class="number">1</span>;</span><br><span class="line">	delay(<span class="number">5</span>);</span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> dat)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	RS = <span class="number">1</span>;</span><br><span class="line">	P2 = dat;</span><br><span class="line">	delay(<span class="number">5</span>);</span><br><span class="line">	enable = <span class="number">1</span>;</span><br><span class="line">	delay(<span class="number">5</span>);</span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_writeLine</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> *line)</span></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> i=<span class="number">0</span>;</span><br><span class="line">	BOOL flag = <span class="number">0</span>;</span><br><span class="line">	LCD_writeCmd(LCD_CLEAR);  <span class="comment">//每次送来信息都清屏，可以一直刷新显示送来的信息。</span></span><br><span class="line">	LCD_writeCmd(FIRST_ROW);</span><br><span class="line">	<span class="keyword">while</span>(line[i] != <span class="string">'\0'</span>)&#123;</span><br><span class="line">		LCD_writeData(line[i++]);</span><br><span class="line">		<span class="keyword">if</span>(i&gt;<span class="number">15</span> &amp;&amp; flag == <span class="number">0</span>)&#123;</span><br><span class="line">			LCD_writeCmd(SECOND_ROW);</span><br><span class="line">			flag = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		delay(<span class="number">5</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LCD_init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	RW = <span class="number">0</span>;</span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">	LCD_writeCmd(LCD_Display_Mode);</span><br><span class="line">	LCD_writeCmd(DISPLAY_ON_NO_CURSOR);</span><br><span class="line">	LCD_writeCmd(AUTO_NEXT_STEP);</span><br><span class="line">	LCD_writeCmd(LCD_CLEAR);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>串口通信</strong><br>这里用于单片机和ESP8266交互，与文章<a href="http://www.jianshu.com/p/ce7b8f409585" target="_blank" rel="noopener">《51单片机实战：与计算机异步串行通信》</a>相似。其中的不同点前面已经说过。</li>
+</ul>
+<p><strong><code>stc52ser.h</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __STC52_SER__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __STC52_SER__</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="title">void</span> <span class="params">(*SerialPort_Event_ByteReceived)</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>;  <span class="comment">//事件：串口接收到字节</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_Init_Low</span><span class="params">()</span></span>;  <span class="comment">//初始化为11.0592MHz下的9600波特率</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_Init_High</span><span class="params">()</span></span>;  <span class="comment">//初始化为22.1184下的115200波特率</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_SendByte</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>;  <span class="comment">//发送一个字节</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_SendData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span>* bytes)</span></span>;  <span class="comment">//发送一组字节</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p><strong><code>stc52ser.c</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ASCIIS.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stc52ser.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Byte Received Event</span></span><br><span class="line"><span class="keyword">void</span> (*SerialPort_Event_ByteReceived)(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte);</span><br><span class="line"></span><br><span class="line"><span class="comment">//initialize registers pertinent to serial port</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_Init_Low</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//set and run Timer1</span></span><br><span class="line">	<span class="comment">//mode2: 8bit, auto reload initial value</span></span><br><span class="line">	<span class="comment">//9600bps and 11.0592MHz =&gt; 0xfd(initial value)</span></span><br><span class="line">	TMOD = <span class="number">0x20</span>;</span><br><span class="line">	TH1 = <span class="number">0xfd</span>;</span><br><span class="line">	TL1 = <span class="number">0xfd</span>;</span><br><span class="line">	TR1 = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//set serial port configuration and enable receive</span></span><br><span class="line">	<span class="comment">//mode1: asyc 10bit(8 data bit), alterable baud rate</span></span><br><span class="line">	SM0 = <span class="number">0</span>;</span><br><span class="line">	SM1 = <span class="number">1</span>;</span><br><span class="line">	REN = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//set interruption</span></span><br><span class="line">	<span class="comment">//enable all and serial port interruption</span></span><br><span class="line">	EA = <span class="number">1</span>;</span><br><span class="line">	ES = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//initialize registers pertinent to serial port for esp8266</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_Init_High</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//SMOD = 1</span></span><br><span class="line">	PCON |= <span class="number">0x80</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//set and run Timer1</span></span><br><span class="line">	<span class="comment">//mode2: 8bit, auto reload initial value</span></span><br><span class="line">	<span class="comment">//115200bps and 22.1184MHz =&gt; 0xfd(initial value)</span></span><br><span class="line">	TMOD = <span class="number">0x20</span>;</span><br><span class="line">	TH1 = <span class="number">0xff</span>;</span><br><span class="line">	TL1 = <span class="number">0xff</span>;</span><br><span class="line">	TR1 = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//set serial port configuration and enable receive</span></span><br><span class="line">	<span class="comment">//mode1: asyc 10bit(8 data bit), alterable baud rate</span></span><br><span class="line">	SM0 = <span class="number">0</span>;</span><br><span class="line">	SM1 = <span class="number">1</span>;</span><br><span class="line">	REN = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//set interruption</span></span><br><span class="line">	<span class="comment">//enable all and serial port interruption</span></span><br><span class="line">	EA = <span class="number">1</span>;</span><br><span class="line">	ES = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Send a byte</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_SendByte</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>&#123;</span><br><span class="line">	ES = <span class="number">0</span>;</span><br><span class="line">	SBUF = byte;</span><br><span class="line">	<span class="keyword">while</span>(!TI);</span><br><span class="line">	<span class="comment">// transmit interrupt</span></span><br><span class="line">	TI = <span class="number">0</span>;</span><br><span class="line">	ES = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Send a data of byte sequence end by 'EOT'</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerialPort_SendData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span>* bytes)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(bytes[i] != EOT)&#123;</span><br><span class="line">		SerialPort_SendByte(bytes[i]);</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//Occured when byte received</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">receivedInterruped</span><span class="params">()</span> interrupt 4 </span>&#123;</span><br><span class="line">	TR0 = <span class="number">0</span>;</span><br><span class="line">	(*SerialPort_Event_ByteReceived)(SBUF);</span><br><span class="line">	<span class="keyword">while</span>(!RI);</span><br><span class="line">	RI = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单说一下，这里留了两个初始化函数，<code>SerialPort_Init_Low()</code>用于11.0592MHz下的9600波特率，<code>SerialPort_Init_High()</code>用于22.1184MHz下的115200波特率（此例用这个）。这样写只是为了以后可以重用（软工狗的矫情）。</p>
+<ul>
+<li><strong>无线</strong><br>这里是<strong>最主要</strong>的代码，都是关于ESP8266的，也是作为一个模块给主函数调用。</li>
+</ul>
+<p><strong><code>esp8266.h</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __ESP8266__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __ESP8266__</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="title">void</span> <span class="params">(*ESP01_Event_WifiConnected)</span><span class="params">()</span></span>;    <span class="comment">//事件：Wi-Fi已连接</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="title">void</span> <span class="params">(*ESP01_Event_IpGot)</span><span class="params">()</span></span>;    <span class="comment">//事件：IP地址已获得</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="title">void</span> <span class="params">(*ESP01_Event_TcpServerConnected)</span><span class="params">()</span></span>;    <span class="comment">//事件：已连接到TCP服务器</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="title">void</span> <span class="params">(*ESP01_Event_MsgReceived)</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span>* head)</span></span>;    <span class="comment">//事件：已获得消息，head为消息数组头</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ESP01_Init</span><span class="params">()</span></span>;  <span class="comment">//无线模块初始化</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ESP01_ConnectToTCPServer</span><span class="params">()</span></span>;  <span class="comment">//连接TCP服务器</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p><strong><code>esp8266.c</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stc52ser.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ASCIIS.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"esp8266.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_MAX_SIZE 99  <span class="comment">//缓冲区大小</span></span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> buffer[BUFFER_MAX_SIZE];  <span class="comment">//缓冲区：用于存放从ESP8266接收来的各种信息</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//连接到TCP服务器的指令：AT+CIPSTART="TCP","192.168.1.110",1234。后面的CR和NL是AT指令的固定结尾，EOT用于SerialPort_SendData发送时识别结尾。</span></span><br><span class="line">code <span class="keyword">unsigned</span> <span class="keyword">char</span> cmd_connectToTCPServer[] = &#123;<span class="number">0x41</span>, <span class="number">0x54</span>, <span class="number">0x2B</span>, <span class="number">0x43</span>, <span class="number">0x49</span>, <span class="number">0x50</span>, <span class="number">0x53</span>, <span class="number">0x54</span>, <span class="number">0x41</span>, <span class="number">0x52</span>, <span class="number">0x54</span>, <span class="number">0x3D</span>, <span class="number">0x22</span>, <span class="number">0x54</span>, <span class="number">0x43</span>, <span class="number">0x50</span>, <span class="number">0x22</span>, <span class="number">0x2C</span>, <span class="number">0x22</span>, <span class="number">0x31</span>, <span class="number">0x39</span>, <span class="number">0x32</span>, <span class="number">0x2E</span>, <span class="number">0x31</span>, <span class="number">0x36</span>, <span class="number">0x38</span>, <span class="number">0x2E</span>, <span class="number">0x31</span>, <span class="number">0x2E</span>, <span class="number">0x31</span>, <span class="number">0x31</span>, <span class="number">0x30</span>, <span class="number">0x22</span>, <span class="number">0x2C</span>, <span class="number">0x31</span>, <span class="number">0x32</span>, <span class="number">0x33</span>, <span class="number">0x34</span>, CR, NL, EOT&#125;;</span><br><span class="line"><span class="keyword">int</span> counter = <span class="number">0</span>;    <span class="comment">//用于ESP8266的执行步骤计数</span></span><br><span class="line"><span class="keyword">int</span> writeIndex = <span class="number">0</span>;    <span class="comment">//缓冲区写索引</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> (*ESP01_Event_WifiConnected)();</span><br><span class="line"><span class="keyword">void</span> (*ESP01_Event_IpGot)();</span><br><span class="line"><span class="keyword">void</span> (*ESP01_Event_TcpServerConnected)();</span><br><span class="line"><span class="keyword">void</span> (*ESP01_Event_MsgReceived)(<span class="keyword">unsigned</span> <span class="keyword">char</span>* head);</span><br><span class="line"></span><br><span class="line"><span class="comment">//注意：下面代码推荐从后往前看，从注释标"1. "处开始。</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">prepareForData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>;    <span class="comment">//因为第四步和第三步会相互调用，所以这里只是做了个声明（C语言的矫情点）。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//4. 将信息插入到缓冲区并送给单片机。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertDataIntoBuffer</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(byte == <span class="string">'\\'</span>)&#123;</span><br><span class="line">        <span class="comment">//检测到'\'后，将信息送出到单片机</span></span><br><span class="line">		buffer[writeIndex] = <span class="string">'\0'</span>;</span><br><span class="line">		(*ESP01_Event_MsgReceived)(buffer);</span><br><span class="line">		SerialPort_Event_ByteReceived = &amp;prepareForData;    <span class="comment">//回到第三步，准备接收下一条信息</span></span><br><span class="line">		writeIndex = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	buffer[writeIndex++] = byte;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//3. 准备信息：这里是过度步骤，前面可以观察到，ESP8266在接收发来的信息时是有个头的，这里的作用就是去头。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">prepareForData</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(byte == <span class="string">':'</span>)&#123;</span><br><span class="line">		SerialPort_Event_ByteReceived = &amp;insertDataIntoBuffer;</span><br><span class="line">		writeIndex = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//识别回馈指令：用于识别接收到的是WIFI CONNECTED（连上热点）还是WIFI IP GOT（获得IP）还是CONNECT（连上TCP服务器）</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">parseCmd</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span>(counter)&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">			<span class="keyword">if</span>(buffer[<span class="number">0</span>] == <span class="string">'W'</span> &amp;&amp; buffer[<span class="number">5</span>] == <span class="string">'C'</span>)&#123;</span><br><span class="line">				(*ESP01_Event_WifiConnected)();</span><br><span class="line">				counter += <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">			<span class="keyword">if</span>(buffer[<span class="number">0</span>] == <span class="string">'W'</span> &amp;&amp; buffer[<span class="number">5</span>] == <span class="string">'G'</span>)&#123;</span><br><span class="line">				(*ESP01_Event_IpGot)();</span><br><span class="line">				counter += <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">			<span class="keyword">if</span>(buffer[<span class="number">0</span>] == <span class="string">'A'</span> &amp;&amp; buffer[<span class="number">3</span>] == <span class="string">'C'</span>)</span><br><span class="line">				counter += <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">			<span class="keyword">if</span>(buffer[<span class="number">0</span>] == <span class="string">'C'</span> &amp;&amp; buffer[<span class="number">3</span>] == <span class="string">'N'</span> &amp;&amp; buffer[<span class="number">6</span>] == <span class="string">'T'</span>)&#123;</span><br><span class="line">				(*ESP01_Event_TcpServerConnected)();</span><br><span class="line">				SerialPort_Event_ByteReceived = &amp;prepareForData;  <span class="comment">//连接到TCP服务器后，进入第三步。</span></span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. 这里开始向缓冲区存储信息，用于识别。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertBuffer</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(byte == NL)&#123;</span><br><span class="line">        <span class="comment">//收到尾（NL）后，将缓冲区的回馈信息送去识别</span></span><br><span class="line">		parseCmd();</span><br><span class="line">		writeIndex = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	buffer[writeIndex++] = byte;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1. 接收头：头是无用信息，但我们要通过头里面的一些字符，推算出什么时候到达第二步（WIFI CONNECTED）</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">headerReceived</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span> byte)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(byte == NL)&#123;</span><br><span class="line">        <span class="comment">//头内有5个NL，只要数够5个，下一个就是第二步的内容了。</span></span><br><span class="line">		<span class="keyword">if</span>(++counter == <span class="number">5</span>)&#123;</span><br><span class="line">			SerialPort_Event_ByteReceived = &amp;insertBuffer;  <span class="comment">//跳到第二步</span></span><br><span class="line">			counter = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//同.h中的声明</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ESP01_Init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	SerialPort_Init_High();</span><br><span class="line">	SerialPort_Event_ByteReceived = &amp;headerReceived;  <span class="comment">//事件注册</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//同.h中的声明</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ESP01_ConnectToTCPServer</span><span class="params">()</span></span>&#123;</span><br><span class="line">	SerialPort_SendData(cmd_connectToTCPServer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>主函数</strong></li>
+</ul>
+<p><strong><code>main.c</code></strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lcd1602.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"esp8266.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//连接到Wi-Fi后，亮第一个灯</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EventHandler_WifiConnected</span><span class="params">()</span></span>&#123;</span><br><span class="line">	P1 &amp;= <span class="number">0xFE</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获得IP后，亮第二个灯</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EventHandler_IpGot</span><span class="params">()</span></span>&#123;</span><br><span class="line">	P1 &amp;= <span class="number">0xFD</span>;</span><br><span class="line">	ESP01_ConnectToTCPServer();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//连接到TCP服务器后，亮第三个灯</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EventHandler_TcpServerConnected</span><span class="params">()</span></span>&#123;</span><br><span class="line">	P1 &amp;= <span class="number">0xFB</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将ESP8266送来的信息，送去LCD显示。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EventHandler_MsgReceived</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">char</span>* head)</span></span>&#123;</span><br><span class="line">	LCD_writeLine(head);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	ESP01_Event_WifiConnected = &amp;EventHandler_WifiConnected;  <span class="comment">//事件注册</span></span><br><span class="line">	ESP01_Event_IpGot = &amp;EventHandler_IpGot;  <span class="comment">//事件注册</span></span><br><span class="line">	ESP01_Event_TcpServerConnected = &amp;EventHandler_TcpServerConnected;  <span class="comment">//事件注册</span></span><br><span class="line">	ESP01_Event_MsgReceived = &amp;EventHandler_MsgReceived;  <span class="comment">//事件注册</span></span><br><span class="line">	ESP01_Init();</span><br><span class="line">	LCD_init();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>编译</strong><br>编译前要设置一下目标参数，如下图。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-51033594c9bd5321.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目标设置"><br>注意这里要改成XDATA，不然编译通不过的。</li>
+</ul>
+<hr>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>开始前请确定在同一个网络下，并且服务端已开启。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-88481580b7552b82.gif?imageMogr2/auto-orient/strip" alt="初始化效果"><br>我只是把单片机连到移动电源上了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-d191d56c414e2e4a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="服务端"><br>为了能让1602第一行显示<code>Hello</code>，第二行显示<code>World</code>，中间可以留了11个空格。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-5e63ca7e86fb3488.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="客户端"></p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>猴！到这里这个程序就算完成了。这个比那些用手机控制开关灯要复杂一些。所以你只要掌握了这个例子，那些都不在话下了。<br>扯单一周目BOSS正式刷完，这个系列的文章将会暂告一段落，因为接下来笔者又要去考试了，还有什么噼里啪啦科三学车，烦。消失一小阵子后我会再次诈尸的！</p>
+<p>恭喜你获得一周目BOSS神装：物联网神技！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/scm/" rel="tag"># scm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/01/29/scm-practice-serial-port-communication-with-computer/" rel="next" title="51单片机实战：与计算机异步串行通信">
+                <i class="fa fa-chevron-left"></i> 51单片机实战：与计算机异步串行通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/06/07/vscode-cpp/" rel="prev" title="LOX: 利用VSCode进行C/C++开发">
+                LOX: 利用VSCode进行C/C++开发 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

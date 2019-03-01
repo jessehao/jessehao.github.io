@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章框架   前言LOX(Lightweight Open-source Xplatform)是我正在编写的一个全新文集，意思就如其名：轻量级-开源-跨平台。就是这个系列中的文章和例程都符合轻量级(Lightweight)、开源(Open-Source)、跨平台(Cross-Platform)。嗯，我这人吧，就好起一些新的名词。本篇作为LOX系列的第一篇，也向你展示了一个最简单的LOX项目。如果想">
+<meta name="keywords" content="vscode,c,cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LOX: 利用VSCode进行C&#x2F;C++开发">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2017/06/07/vscode-cpp/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="文章框架   前言LOX(Lightweight Open-source Xplatform)是我正在编写的一个全新文集，意思就如其名：轻量级-开源-跨平台。就是这个系列中的文章和例程都符合轻量级(Lightweight)、开源(Open-Source)、跨平台(Cross-Platform)。嗯，我这人吧，就好起一些新的名词。本篇作为LOX系列的第一篇，也向你展示了一个最简单的LOX项目。如果想">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-edc2731887b2158f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-08487af4f6567b0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-515e240cf993e520.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-d457c1be4168dd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-5a733972369a1f05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-60eef620dc93c3c6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-2441f7ae3001340a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-aa1d652013107180.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-519752f3f49b83ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-78bbca7990218cf1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-456e425563fa52c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-02fb690e548d4848.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-5c039eb579a932b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-17331ef7f920259d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-67b3db806fd578be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-229ee65ae58f18f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-cda05dce5f441b24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-2163844177906bf7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-60a5774f0a3207b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-01T06:52:29.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LOX: 利用VSCode进行C&#x2F;C++开发">
+<meta name="twitter:description" content="文章框架   前言LOX(Lightweight Open-source Xplatform)是我正在编写的一个全新文集，意思就如其名：轻量级-开源-跨平台。就是这个系列中的文章和例程都符合轻量级(Lightweight)、开源(Open-Source)、跨平台(Cross-Platform)。嗯，我这人吧，就好起一些新的名词。本篇作为LOX系列的第一篇，也向你展示了一个最简单的LOX项目。如果想">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1704151-edc2731887b2158f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2017/06/07/vscode-cpp/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>LOX: 利用VSCode进行C/C++开发 | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2017/06/07/vscode-cpp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LOX: 利用VSCode进行C/C++开发
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-06-07 15:05:00" itemprop="dateCreated datePublished" datetime="2017-06-07T15:05:00+08:00">2017-06-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 14:52:29" itemprop="dateModified" datetime="2019-03-01T14:52:29+08:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/LOX/" itemprop="url" rel="index"><span itemprop="name">LOX</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文章框架"><a href="#文章框架" class="headerlink" title="文章框架"></a>文章框架</h1><p><img src="http://upload-images.jianshu.io/upload_images/1704151-edc2731887b2158f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="脑图"></p>
+<hr>
+<hr>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>LOX</strong>(Lightweight Open-source Xplatform)是我正在编写的一个全新文集，意思就如其名：<strong>轻量级-开源-跨平台</strong>。就是这个系列中的文章和例程都符合轻量级(Lightweight)、开源(Open-Source)、跨平台(Cross-Platform)。嗯，我这人吧，就好起一些新的名词。<br>本篇作为LOX系列的第一篇，也向你展示了一个最简单的LOX项目。如果想看一个稍微复杂一点的LOX项目，可以clone我Github上的一个Repo：<a href="https://github.com/jessehao/2048_CLI_xplat_cpp_cmake">2048 CLI</a>。欢迎来搞~</p>
+<hr>
+<h1 id="单源文件"><a href="#单源文件" class="headerlink" title="单源文件"></a>单源文件</h1><p>先从简单的来，一个源文件。</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>进行本次LOX开发所需要工具，点击下面的Title进入官网下载。</p>
+<ul>
+<li><h4 id="VSCode-Visual-Studio-Code"><a href="#VSCode-Visual-Studio-Code" class="headerlink" title="VSCode (Visual Studio Code)"></a><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode (Visual Studio Code)</a></h4>VSCode是微软出品的一款非常良心的轻量级编辑器，虽说是完全照着Sublime Text弄出来的，但它<strong>免费</strong>啊，还开源啊，所以我也就不深究模仿不模仿了。（嗨呀，原则呢？嗯？）</li>
+</ul>
+<p><strong>需要的插件</strong> </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">插件</th>
+<th style="text-align:center">标识符</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank" rel="noopener">C/C++</a></td>
+<td style="text-align:center">ms-vscode.cpptools</td>
+<td style="text-align:left">C/C++语言支持，简单的编辑、编译、调试等功能。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><h4 id="MinGW-Minimalist-GNU-for-Windows"><a href="#MinGW-Minimalist-GNU-for-Windows" class="headerlink" title="MinGW (Minimalist GNU for Windows)"></a><a href="http://www.mingw.org/" target="_blank" rel="noopener">MinGW (Minimalist GNU for Windows)</a></h4>这个工具是在Windows上需要的。因为Windows没有GNU工具包，MinGW就是为Windows而生的GNU工具包。</li>
+</ul>
+<p><strong>需要安装的包</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">包</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">mingw32-gcc.bin</td>
+<td style="text-align:center">GNU C编译器</td>
+</tr>
+<tr>
+<td style="text-align:center">mingw32-gcc-g++.bin</td>
+<td style="text-align:center">GNU C++编译器</td>
+</tr>
+<tr>
+<td style="text-align:center">mingw32-gdb.bin</td>
+<td style="text-align:center">GNU 调试器</td>
+</tr>
+</tbody>
+</table>
+<p><strong>环境变量</strong><br>在系统变量的<code>PATH</code>中，添加MinGW安装的根目录中的bin文件夹（如<code>C:\MinGW\bin</code>），且尽量将这一项往上移（为了优先搜索该目录）。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-08487af4f6567b0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="设置过程"><br>完成这一步后，如果打开了VSCode，记得要重启VSCode。</p>
+<hr>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>  <strong>建立工作空间</strong> </p>
+<p>  新建一个文件夹 - 右键 - <strong>Open with Code</strong>。使用这种方法的前提是你在安装VSCode时选中了“”<br><img src="http://upload-images.jianshu.io/upload_images/1704151-515e240cf993e520.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Open with Code"><br>或者在VSCode中 - 文件 - <strong>打开文件夹</strong>，选中一个空文件夹作工作空间。</p>
+<p>  <strong>新建源文件</strong><br>  鼠标移动到新建的文件夹的根目录处（我的是“HelloWorld”），点击下图蓝色框住的图标（新建文件）。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-d457c1be4168dd0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建按钮"><br>之后在其中输入文件名（包括后缀名），本例的后缀名写”.c”或”.cpp”。然后在其中写个最简单的HelloWorld。</p>
+<p>  <strong>代码</strong><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello World"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编码时，如果想自动补全，需要在包含指定头文件后保存代码，然后才会启动自动补全。<br>也就是说，它只对保存后的代码进行探测。</p>
+<hr>
+<h2 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h2><p>生成快捷键：<code>Ctrl(Mac: Command)+Shift+B</code><br>第一次生成时，VSCode会提示找不到生成的配置文件<code>task.json</code>，点击“配置生成任务”。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-5a733972369a1f05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="配置生成任务"><br>在给出的模板中选择<code>Others</code>。在打开的<code>task.json</code>中改为下述代码。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">    <span class="attr">"command"</span>: <span class="string">"gcc"</span>,</span><br><span class="line">    "isShellCommand": true,    // 是否为Shell命令</span><br><span class="line">    "args": ["-g","$&#123;file&#125;","-o","$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;.out"],</span><br><span class="line">    "showOutput": "always"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实作用就是代码中所述的。<br><code>&quot;command&quot;: &quot;gcc&quot;</code>和<code>&quot;args&quot;: [&quot;-g&quot;,&quot;${file}&quot;,&quot;-o&quot;,&quot;${fileDirname}/${fileBasenameNoExtension}.out&quot;]</code>就相当于在<a href="https://en.wikipedia.org/wiki/Shell_(computing" target="_blank" rel="noopener">Shell</a>)中直接键入<code>gcc -c 源文件.c -o 源文件所在目录/源文件.out</code>。将鼠标放在Key（冒号前面的）上会显示所对应的意思（下面的Launch.json同）。<br>简单的解释一下其中几个<code>$</code>标识</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">标识</th>
+<th style="text-align:left">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>${file}</code></td>
+<td style="text-align:left">当前文件的完整文件名（包括路径、文件名、后缀名）</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>${fileDirname}</code></td>
+<td style="text-align:left">当前文件的路径</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>${fileBasenameNoExtension}</code></td>
+<td style="text-align:left">当前文件的文件名（<strong>不</strong>包括路径、后缀名）</td>
+</tr>
+</tbody>
+</table>
+<p>其中所说的“当前文件”指的是你在VSCode编辑器中打开的并正在编辑的文件。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-60eef620dc93c3c6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="当前正在编辑的文件"></p>
+<p>完成<code>task.json</code>的配置后，我们缩写的程序已经可以运行了。生成的程序就是源文件所在根目录中出现的与源文件同名但后缀名为<code>.out</code>的文件。</p>
+<hr>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>我们当然不能仅仅满足于生成出程序就行的，大部分情况我们是要调试的。</p>
+<h5 id="调试快捷键：F5"><a href="#调试快捷键：F5" class="headerlink" title="调试快捷键：F5"></a>调试快捷键：<code>F5</code></h5><p>第一次按<code>F5</code>时和生成时一样，找不到配置文件，在打开的模板中选<code>C++ (GDB/LLDB)</code>（可以跨平台）。<br>生成的配置文件为<code>launch.json</code></p>
+<h5 id="将launch-json改为下述代码"><a href="#将launch-json改为下述代码" class="headerlink" title="将launch.json改为下述代码"></a>将<code>launch.json</code>改为下述代码</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            "name": "(gdb) Launch",    // 本配置的名称，随便起</span><br><span class="line">            "type": "cppdbg",</span><br><span class="line">            "request": "launch",    // 如果调试的类型为附加进程，需将这里改为attach</span><br><span class="line">            "program": "$&#123;fileDirname&#125;/$&#123;fileBasenameNoExtension&#125;.out",    // 要调试的程序路径</span><br><span class="line">            "stopAtEntry": false,    // 是否在起点处停顿</span><br><span class="line">            "cwd": "$&#123;workspaceRoot&#125;",</span><br><span class="line">            "externalConsole": true,    // 在外部控制台运行。若为false，则运行在VSCode自带的控制台中</span><br><span class="line">            "linux": &#123;    // Linux 系统下的配置</span><br><span class="line">                "MIMode": "gdb"</span><br><span class="line">            &#125;,</span><br><span class="line">            "osx": &#123;    // OS X系统下的配置</span><br><span class="line">                "MIMode": "lldb"</span><br><span class="line">            &#125;,</span><br><span class="line">            "windows": &#123;    // Windows 系统下的配置</span><br><span class="line">                "MIMode": "gdb",</span><br><span class="line">                "miDebuggerPath": "gdb.exe"</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Windows默认是没有gdb或lldb的，所以我们需要安装MinGW中的gdb，并在这里设置gdb的路径。只写程序名是因为设置了环境变量。<br>完成<code>launch.json</code>的配置并切换到源代码编辑页之后</p>
+<h5 id="再一次：F5"><a href="#再一次：F5" class="headerlink" title="再一次：F5"></a>再一次：<code>F5</code></h5><p><img src="http://upload-images.jianshu.io/upload_images/1704151-2441f7ae3001340a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="打上断点"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-aa1d652013107180.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="合影留念"></p>
+<hr>
+<hr>
+<h1 id="多源文件"><a href="#多源文件" class="headerlink" title="多源文件"></a>多源文件</h1><p>什么！你不满足于单源文件开发？！来来来，我给你看个宝贝。</p>
+<p>的确，单源文件开发一般也就是个做做算法题，现在随便写个像样的工程都是多个源文件编译链接一条龙的。这样VSCode可以吗，也可以！但需要新的帮手：<strong>CMake</strong>。</p>
+<h2 id="工具-1"><a href="#工具-1" class="headerlink" title="工具"></a>工具</h2><ul>
+<li><h4 id="VSCode-Visual-Studio-Code-1"><a href="#VSCode-Visual-Studio-Code-1" class="headerlink" title="VSCode (Visual Studio Code)"></a><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode (Visual Studio Code)</a></h4></li>
+</ul>
+<p><strong>新需要的插件</strong><br>实际上通过CMake在VSCode上进行项目开发可以不需要任何插件，但是用上这些插件之后你会发现这个过程会变得特别方便！<br>除去单源文件中所提到的<code>cpptools</code>，还需要下面的插件。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">插件</th>
+<th style="text-align:center">标识符</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><a href="https://marketplace.visualstudio.com/items?itemName=twxs.cmake" target="_blank" rel="noopener">CMake</a></td>
+<td style="text-align:center">twxs.cmake</td>
+<td style="text-align:left">提供CMake语法支持，包括高亮和自动补全等</td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="https://marketplace.visualstudio.com/items?itemName=vector-of-bool.cmake-tools" target="_blank" rel="noopener">CMake Tools</a></td>
+<td style="text-align:center">vector-of-bool.cmake-tools</td>
+<td style="text-align:left">这个屌！完全把CMake封装成一套VSCode底边栏的工具集</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><h4 id="MinGW-Minimalist-GNU-for-Windows-1"><a href="#MinGW-Minimalist-GNU-for-Windows-1" class="headerlink" title="MinGW (Minimalist GNU for Windows)"></a><a href="http://www.mingw.org/" target="_blank" rel="noopener">MinGW (Minimalist GNU for Windows)</a></h4>同样这一步仅在Windows上做。</li>
+</ul>
+<p><strong>需要新安装的包</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">包</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">mingw32-make.bin</td>
+<td style="text-align:center">GNU Make，根据makefiles（在这里makefiles由CMake搞定）生成项目</td>
+</tr>
+</tbody>
+</table>
+<p>为了方便调用，我一般会把<code>mingw32-make.exe</code>在其目录中复制一份出来，命名为<code>make.exe</code>。<br>这一步某种程度意义上讲还蛮重要的，第一是方便自己调用（直接在shell里<code>make</code>），第二是方便vscode的插件调用（如果不弄一个<code>cmake.exe</code>出来的话，<code>vector-of-bool.cmake-tools</code>会报错，不过具体锅是<a href="https://github.com/vector-of-bool/vscode-cmake-tools"><code>vector-of-bool.cmake-tools</code></a>还是<a href="https://github.com/twxs/vs.language.cmake"><code>twxs.cmake</code></a>的也不太清楚，目前<a href="https://github.com/vector-of-bool">vector-of-bool</a>已经把这个问题(<a href="https://github.com/vector-of-bool/vscode-cmake-tools/issues/157"><code>#157</code></a>)标记为<code>bug</code>，并打算在<a href="https://github.com/vector-of-bool/vscode-cmake-tools/releases"><code>0.10.0</code></a>版本解决。）。</p>
+<ul>
+<li><h4 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a><a href="https://cmake.org/" target="_blank" rel="noopener">CMake</a></h4>安装时记得将<code>Add CMake to system PATH</code>勾上。是<code>for all users</code>呢还是<code>for current user</code>你自己看咯。</li>
+</ul>
+<hr>
+<h2 id="编码-1"><a href="#编码-1" class="headerlink" title="编码"></a>编码</h2><p>上个例子是C，那这个就上C++好了。</p>
+<h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><p>我就不同目录下多文件了啊，那没啥意思。咱上多层级目录多源文件的。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-519752f3f49b83ce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"></p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><ul>
+<li><code>Printer.h</code></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Printer</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">    Printer();</span><br><span class="line">    ~Printer();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Printer.cpp</code></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Printer.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">void</span> Printer::print()&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Hello World"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Printer::Printer() &#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Printer Object Constructed"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> Printer::~Printer()&#123;</span><br><span class="line">     <span class="built_in">cout</span>&lt;&lt;<span class="string">"Printer Object Destructed"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>‘main.cpp’</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Lib/Printer.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Printer* printer = <span class="keyword">new</span> Printer();</span><br><span class="line">    printer-&gt;print();</span><br><span class="line">    <span class="keyword">delete</span> printer;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="生成项目"><a href="#生成项目" class="headerlink" title="生成项目"></a>生成项目</h2><h4 id="编写CMakeLists"><a href="#编写CMakeLists" class="headerlink" title="编写CMakeLists"></a>编写CMakeLists</h4><p>每一个包含源文件的目录中都要编写<code>CMakeLists.txt</code></p>
+<ul>
+<li><code>CMakeLists.txt</code><br>根目录中的<code>CMakeLists.txt</code>，一般程序入口（<code>main</code>函数）在此。</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用CMake Tools插件（可选，如果这个项目去到一个没有这个插件的机器也同样可以生成项目）</span></span><br><span class="line"><span class="keyword">include</span>(CMakeToolsHelpers OPTIONAL)</span><br><span class="line"></span><br><span class="line"><span class="comment"># CMake 最低版本号要求</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">2.8</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 项目名称</span></span><br><span class="line"><span class="keyword">project</span>(CMakeTest)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找当前目录下的所有源文件</span></span><br><span class="line"><span class="comment"># 并将名称保存到 DIR_ROOT_SRCS变量</span></span><br><span class="line"><span class="keyword">aux_source_directory</span>(. DIR_ROOT_SRCS)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加 Lib子目录</span></span><br><span class="line"><span class="keyword">add_subdirectory</span>(Lib)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定生成目标</span></span><br><span class="line"><span class="keyword">add_executable</span>(CMakeTest main.cpp <span class="variable">$&#123;DIR_ROOT_SRCS&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加链接库</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(CMakeTest PrinterLib)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Lib/CMakeLists.txt</code><br>子目录中的<code>CMakeLists.txt</code>，一般将子目录中的源文件编译为静态链接库。</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>(CMakeToolsHelpers OPTIONAL)</span><br><span class="line"></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">2.8</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">aux_source_directory</span>(. DIR_LIB_SRCS)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成链接库</span></span><br><span class="line"><span class="keyword">add_library</span>(PrinterLib <span class="variable">$&#123;DIR_LIB_SRCS&#125;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h4><p>完成上面步骤后，就可以Build了，如果你安装了<code>vector-of-bool.cmake-tools</code>插件，VSCode左下角的底边栏会有<code>Build</code>按钮。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-78bbca7990218cf1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Build Button"><br>点击<code>Build</code>后，选择<code>Debug</code>（为了下一步演示调试，若不调试就<code>Release</code>）<br><img src="http://upload-images.jianshu.io/upload_images/1704151-456e425563fa52c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Build Setting"><br>输出框会不停往出喷东西，只要最后输出了<code>[vscode] cmake exited with return code 0</code>，就说明Build成功。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-02fb690e548d4848.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Build Output"></p>
+<h4 id="目录结构-1"><a href="#目录结构-1" class="headerlink" title="目录结构"></a>目录结构</h4><p><img src="http://upload-images.jianshu.io/upload_images/1704151-5c039eb579a932b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>新增加的build文件夹是<code>vector-of-bool.cmake-tools</code>插件干的，它做的很好，如果我们手动<code>cmake - make</code>，那些生成文件会跑的到处都是。<br>其中<code>build/CMakeTests.exe</code>就是我们生成的可执行程序。</p>
+<hr>
+<h2 id="调试-1"><a href="#调试-1" class="headerlink" title="调试"></a>调试</h2><h4 id="调试设置"><a href="#调试设置" class="headerlink" title="调试设置"></a>调试设置</h4><p><code>文件</code> - <code>首选项</code> - <code>设置</code><br>在<code>CMake Tools configuration</code>中找到<code>cmake.debugConfig</code>，生成设置：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">"cmake.debugConfig": &#123;</span><br><span class="line">        "miDebuggerPath": "gdb.exe",    // Windows 下指定gdb路径（已添加到PATH）</span><br><span class="line">        "externalConsole": true,    // 使用外部控制台</span><br><span class="line">        "stopAtEntry": false    // 在起点处停顿（噢！在这停顿！）</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<h4 id="Start-Debugging"><a href="#Start-Debugging" class="headerlink" title="Start Debugging"></a>Start Debugging</h4><p><img src="http://upload-images.jianshu.io/upload_images/1704151-17331ef7f920259d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="藏起来的Debug按钮"></p>
+<p>刚Build完你可能看不到这两个按钮：<br><img src="http://upload-images.jianshu.io/upload_images/1704151-67b3db806fd578be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="调试按钮"><br>其实他们藏起来了… 这应该是个Bug，我已经反馈给作者了。</p>
+<p>重启VSCode后他们就会出现，或者直接点那两个藏起来的按钮（还有这种操作？！）：<strong>先点右边选择调试目标</strong>，再点左边开始调试。</p>
+<h4 id="合影留念"><a href="#合影留念" class="headerlink" title="合影留念"></a>合影留念</h4><p><img src="http://upload-images.jianshu.io/upload_images/1704151-229ee65ae58f18f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="完结撒花"></p>
+<hr>
+<hr>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>Code Everywhere, Build Everywhere.<br>这样的搭配是不是很爽呢？除了MinGW是Windows特有的矫情外。其余的在任何平台都是一样的。虽说现在VSCode和上面的大部分插件都运行的不太稳定，但是我还是很喜欢这种组合进行跨平台的轻量级开发的。</p>
+<hr>
+<h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><ul>
+<li>####Q: VSCode或编译器找不到头文件?<br>A: 如果VSCode用绿色波浪线给你划出那些找不到源的代码时，将鼠标停留在波浪线上，然后会出现一个小    灯泡。点“<strong>Add include path to settings.</strong>”。然后它会自动帮你建立一个名为“c_cpp_properties.json”的文件。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">"name": "Mac",</span><br><span class="line">"includePath": [</span><br><span class="line">    "$&#123;workspaceRoot&#125;",</span><br><span class="line">    "/usr/include",</span><br><span class="line">    <span class="string">"/usr/local/include"</span></span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>你会在其中找到类似上述代码块的地方，根据“name”后面所描述的系统，在其下的“includePath”中手动添加头文件目录。<strong>JSON语法</strong>。</p>
+<ul>
+<li><p>####Q: 为什么路径动不动就写成<code>${fileDirname}/${fileBasenameNoExtension}.out</code>?<br>A: 这样做的好处就是可以在同一配置下进行多个单文件的编译开发，不用每次生成和调试的时候都去写配置文件。使用场景嘛，主要就是写写算法题之类的。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-cda05dce5f441b24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="我写算法题时的目录结构"><br><code>.out</code>后缀名就是自己瞎起的。不同平台的可执行后缀名都不一样，这样写就跟谁都不沾边了…</p>
+</li>
+<li><p>####Q: 如果我不用<code>vector-of-bool.cmake-tools</code>插件，要如何Build?<br>A: 写完<code>CMakeLists.txt</code>后，打开VSCode中自带的终端（点击底边栏的输出按钮）</p>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-2163844177906bf7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出按钮"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-60a5774f0a3207b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="终端"><br>键入：<code>cmake .</code>会生成系统对应的项目（如果你是Windows并安装了Visual Studio，他就会生成VS项目）。<br>若想生成<code>MinGW Makefiles</code>则键入<code>cmake -G &quot;MinGW Makefiles&quot; .</code>（注意区分大小写），之后会为你生成makefiles，然后再键入<code>make</code>（若没制作前面所提到的<code>mingw32-make.exe</code>的名为<code>make.exe</code>的副本，则键入<code>mingw32-make</code>），最终生成可执行文件。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://code.visualstudio.com/docs/languages/cpp" target="_blank" rel="noopener">Doc: C/C++ for VS Code (Preview)</a></li>
+<li><a href="http://www.hahack.com/codes/cmake/" target="_blank" rel="noopener">CMake 入门实战</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/vscode/" rel="tag"># vscode</a>
+          
+            <a href="/jessehao.github.io/tags/c/" rel="tag"># c</a>
+          
+            <a href="/jessehao.github.io/tags/cpp/" rel="tag"># cpp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/02/10/scm-practice-IOT-ESP8266/" rel="next" title="51单片机实战：物联网初步のESP8266无线网络模块">
+                <i class="fa fa-chevron-left"></i> 51单片机实战：物联网初步のESP8266无线网络模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/07/18/beginning-of-objc-memory-management/" rel="prev" title="Objective-C的内存管理艺术：入门">
+                Objective-C的内存管理艺术：入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

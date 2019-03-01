@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章框架   前言好吧，最终我还是决定把LCD和串口通信分开写。 首先祝各位新春快乐，鸡年大吉。上班的事业有成，上学的天天向上。过大年呢，还真没啥心情码字。 借着爆竹声咱扯会儿LCD（液晶显示器，Liquid Crystal Display）。今天要实战的这款俗称为LCD1602，尤其注意这个1602，他说明了这款显示器的显示能力：每行16个字符，共2行，乃字符显示器（仅ASCII）。  参数">
+<meta name="keywords" content="scm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机实战：液晶显示器のLCD1602">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2017/01/27/scm-practice-LCD1602/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="文章框架   前言好吧，最终我还是决定把LCD和串口通信分开写。 首先祝各位新春快乐，鸡年大吉。上班的事业有成，上学的天天向上。过大年呢，还真没啥心情码字。 借着爆竹声咱扯会儿LCD（液晶显示器，Liquid Crystal Display）。今天要实战的这款俗称为LCD1602，尤其注意这个1602，他说明了这款显示器的显示能力：每行16个字符，共2行，乃字符显示器（仅ASCII）。  参数">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-68f770d416d00fe6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-a6258ebf752d74a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-44fcaae3443786b9.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-9c5ef01c212ce47b.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2019-03-01T07:20:32.630Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="51单片机实战：液晶显示器のLCD1602">
+<meta name="twitter:description" content="文章框架   前言好吧，最终我还是决定把LCD和串口通信分开写。 首先祝各位新春快乐，鸡年大吉。上班的事业有成，上学的天天向上。过大年呢，还真没啥心情码字。 借着爆竹声咱扯会儿LCD（液晶显示器，Liquid Crystal Display）。今天要实战的这款俗称为LCD1602，尤其注意这个1602，他说明了这款显示器的显示能力：每行16个字符，共2行，乃字符显示器（仅ASCII）。  参数">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1704151-68f770d416d00fe6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2017/01/27/scm-practice-LCD1602/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>51单片机实战：液晶显示器のLCD1602 | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2017/01/27/scm-practice-LCD1602/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">51单片机实战：液晶显示器のLCD1602
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-01-27 22:34:00" itemprop="dateCreated datePublished" datetime="2017-01-27T22:34:00+08:00">2017-01-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 15:20:32" itemprop="dateModified" datetime="2019-03-01T15:20:32+08:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/扯会儿单片机开发/" itemprop="url" rel="index"><span itemprop="name">扯会儿单片机开发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="文章框架"><a href="#文章框架" class="headerlink" title="文章框架"></a>文章框架</h2><p><img src="http://upload-images.jianshu.io/upload_images/1704151-68f770d416d00fe6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="文章框架"></p>
+<hr>
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好吧，最终我还是决定把LCD和串口通信分开写。</p>
+<p>首先祝各位新春快乐，鸡年大吉。上班的事业有成，上学的天天向上。过大年呢，还真没啥心情码字。</p>
+<p>借着爆竹声咱扯会儿LCD（液晶显示器，Liquid Crystal Display）。今天要实战的这款俗称为LCD1602，尤其注意这个1602，他说明了这款显示器的显示能力：每行16个字符，共2行，乃字符显示器（仅ASCII）。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">显示容量</th>
+<th style="text-align:center">芯片工作电压</th>
+<th style="text-align:center">工作电流</th>
+<th style="text-align:center">模块最佳工作电压</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">16×2 Char</td>
+<td style="text-align:center">4.5~5.5V</td>
+<td style="text-align:center">2.0mA(5.0V)</td>
+<td style="text-align:center">5.0V</td>
+</tr>
+</tbody>
+</table>
+<h4 id="引脚"><a href="#引脚" class="headerlink" title="引脚"></a>引脚</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">Vss</th>
+<th style="text-align:center">Vdd</th>
+<th style="text-align:center">VO</th>
+<th style="text-align:center">RS</th>
+<th style="text-align:center">R/W</th>
+<th style="text-align:center">E</th>
+<th style="text-align:center">D0~7</th>
+<th style="text-align:center">BLA</th>
+<th style="text-align:center">BLK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">接地</td>
+<td style="text-align:center">正极</td>
+<td style="text-align:center">对比度调节</td>
+<td style="text-align:center">数据(H)/命令(L)选择端</td>
+<td style="text-align:center">读(H)/写(L)选择端</td>
+<td style="text-align:center">使能(Enable)信号</td>
+<td style="text-align:center">数据口</td>
+<td style="text-align:center">背光电源正极</td>
+<td style="text-align:center">背光电源负极</td>
+</tr>
+</tbody>
+</table>
+<p>LCD上也有一个单片机，用于控制屏幕显示。我们并不是直接操作那块屏幕，而是与那个单片机交互。<br>其中D0~7这8个数据口就是用于交互的，为<strong>并行传输</strong>。</p>
+<h4 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h4><p>因为我们要和LCD内嵌的单片机交互，所以需要指令。下面所列的东西都是当RS为低<strong>电平时</strong>发送的（若为高电平，就识别为数据）。</p>
+<ul>
+<li><strong>数据指针</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">第一行</th>
+<th style="text-align:center">第二行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0x80</td>
+<td style="text-align:center">0xC0 (0x80+0x40)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>显示相关</strong></li>
+</ul>
+<p>模式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0x38</td>
+<td style="text-align:center">设置16×2显示，5x7点阵，8位数据接口</td>
+</tr>
+</tbody>
+</table>
+<p>方式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">D</th>
+<th style="text-align:center">C</th>
+<th style="text-align:center">B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">Display，1：开显示</td>
+<td style="text-align:center">Cursor，1：显示光标</td>
+<td style="text-align:center">Blink，1：光标闪烁</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">N</th>
+<th style="text-align:center">S</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">\</td>
+<td style="text-align:center">Next，1：读/写一个字符后，指针自动加1</td>
+<td style="text-align:center">Shift，1：写字符时，相对字符静止的屏幕移动</td>
+</tr>
+</tbody>
+</table>
+<p>清屏：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0x01</td>
+<td style="text-align:center">数据指针清0且所有指针清空</td>
+</tr>
+<tr>
+<td style="text-align:center">0x02</td>
+<td style="text-align:center">仅数据指针清0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>操作</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0x10</td>
+<td style="text-align:center">光标左移</td>
+</tr>
+<tr>
+<td style="text-align:center">0x14</td>
+<td style="text-align:center">光标右移</td>
+</tr>
+<tr>
+<td style="text-align:center">0x18</td>
+<td style="text-align:center">整体左移</td>
+</tr>
+<tr>
+<td style="text-align:center">0x1c</td>
+<td style="text-align:center">整体右移</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="电平"><a href="#电平" class="headerlink" title="电平"></a>电平</h2><p>简单说下，逻辑电路中只有高电平和低电平，也就是程序里面的1和0。但是在物理层面上，它需要一个具体的表现，然后整理成标准。<br><strong>TTL</strong>就是本例中要用到的一种电平，单片机和LCD通过引脚传递电信号，从而达到1和0的传递。<br>TTL中的低电平（0）表现为0V，高电平（1）表现为5V</p>
+<hr>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h4 id="界内显示"><a href="#界内显示" class="headerlink" title="界内显示"></a>界内显示</h4><ul>
+<li><strong>电路</strong></li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-a6258ebf752d74a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="电路"></p>
+<p>在Proteus里，1602就是<code>LM016L</code>，除了没有背光灯电源外用法一致(<code>VEE</code>是对比度调节，本例不用)。<br><code>RP1</code>为上拉电阻，用于提高电压。由于这款单片机的P0引脚组的电压低于5V，所以需要上拉至5V，达到TTL的标准。<br>那个圆形的刻着<code>Volts</code>字样的东西是电压表，连接两个没被上拉电压的P0引脚，具体数值看后面的演示图。</p>
+<ul>
+<li><strong>代码</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> uchar unsigned char</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> uint unsigned int</span></span><br><span class="line">	</span><br><span class="line"><span class="comment">//coefficient of 1602 display(16 row 2 col. 5*7px per Char)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LCD_CLEAR 0x01      <span class="comment">//宏定义：清屏</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_MODE_1602 0x38  <span class="comment">//宏定义：1602显示模式</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_OFF 0x08  <span class="comment">//宏定义：关显示</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_NO_CURSOR 0x0c  <span class="comment">//宏定义：开显示且无光标</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_WITH_CURSOR_NO_BLINK 0x0e  <span class="comment">//宏定义：开显示且有光标但不闪烁</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DISPLAY_ON_WITH_CURSOR_BLINK 0x0f  <span class="comment">//宏定义：开显示且有光标且闪烁</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_BACK_STEP 0x04  <span class="comment">//宏定义：读/写时指针自动减1</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_NEXT_STEP 0x06  <span class="comment">//宏定义：读/写时指针自动加1</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_DISPLAY_MOVE_LEFT 0x07  <span class="comment">//宏定义：字符相对静止，整屏左移</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AUTO_DISPLAY_MOVE_RIGHT 0x05  <span class="comment">//宏定义：字符相对静止，整屏右移</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ALL_MOVE_LEFT 0x18  <span class="comment">//宏定义：屏幕左移</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ALL_MOVE_RIGHT 0x1c  <span class="comment">//宏定义：屏幕右移</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CURSOR_MOVE_LEFT 0x10  <span class="comment">//宏定义：光标左移</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CURSOR_MOVE_RIGHT 0x14  <span class="comment">//宏定义：光标右移</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FIRST_ROW 0x80  <span class="comment">//宏定义：第一行头地址</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SECOND_ROW FIRST_ROW+0x40  <span class="comment">//宏定义：第二行头地址</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">uchar code fst[] = <span class="string">"Hello World!"</span>;  <span class="comment">//第一行要显示的数据数组</span></span><br><span class="line">uchar code sec[] = <span class="string">""</span>;  <span class="comment">//第二行要显示的数据数组</span></span><br><span class="line">uchar num;  <span class="comment">//字符计数</span></span><br><span class="line">sbit enable = P0^<span class="number">5</span>;  <span class="comment">//使能端</span></span><br><span class="line">sbit RS = P0^<span class="number">7</span>;  <span class="comment">//数据/命令切换</span></span><br><span class="line">sbit RW = P0^<span class="number">6</span>;  <span class="comment">//读/写切换</span></span><br><span class="line"></span><br><span class="line">sbit anode = P0^<span class="number">0</span>;  <span class="comment">//连接电压表阳极</span></span><br><span class="line">sbit cathode = P0^<span class="number">1</span>;  <span class="comment">//连接电压表阴极</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//粗制的延时器，没走一次这个函数大约为1ms，适用于11.0592MHz及附近</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delay</span><span class="params">(uint z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	uint x,y;</span><br><span class="line">	<span class="keyword">for</span>(x=z;x&gt;<span class="number">0</span>;x--)</span><br><span class="line">		<span class="keyword">for</span>(y=<span class="number">110</span>;y&gt;<span class="number">0</span>;y--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//写命令</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">writeCmd</span><span class="params">(uchar cmd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	RS = <span class="number">0</span>;  <span class="comment">//切换为写命令模式</span></span><br><span class="line">	P2 = cmd;</span><br><span class="line">	delay(<span class="number">1</span>);  <span class="comment">//注意</span></span><br><span class="line">	enable = <span class="number">1</span>;  <span class="comment">//执行！</span></span><br><span class="line">	delay(<span class="number">1</span>);  <span class="comment">//注意</span></span><br><span class="line">	enable = <span class="number">0</span>; <span class="comment">//执行完毕！</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">writeDat</span><span class="params">(uchar dat)</span></span>&#123;</span><br><span class="line">	RS = <span class="number">1</span>; <span class="comment">//切换为数据模式</span></span><br><span class="line">	P2 = dat;</span><br><span class="line">	delay(<span class="number">1</span>);  <span class="comment">//注意</span></span><br><span class="line">	enable = <span class="number">1</span>;</span><br><span class="line">	delay(<span class="number">1</span>);  <span class="comment">//注意</span></span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	anode = <span class="number">1</span>;</span><br><span class="line">	cathode = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	RW = <span class="number">0</span>;  <span class="comment">//写模式，本例只往LCD写数据</span></span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">	writeCmd(DISPLAY_MODE_1602);  <span class="comment">//发送命令：1602模式</span></span><br><span class="line">	writeCmd(DISPLAY_ON_WITH_CURSOR_BLINK);  <span class="comment">//发送命令：开始显示并闪烁光标</span></span><br><span class="line">	writeCmd(AUTO_NEXT_STEP);  <span class="comment">//发送命令：数据指针自动加1</span></span><br><span class="line">	writeCmd(LCD_CLEAR);  <span class="comment">//发送命令：清屏</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	writeCmd(FIRST_ROW);  <span class="comment">//发送命令：开始从第一行写入</span></span><br><span class="line">	<span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;=<span class="number">12</span>;num++)&#123;</span><br><span class="line">		writeDat(fst[num]);  <span class="comment">//发送数据，每次一字节</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好，说一下上面代码中标<code>//注意</code>的地方，全都是<code>delay(1)</code>。<br>为了什么呢，不是蛋疼，是因为单片机给LCD传送信号时，数据是要放在数据线上的，要是LCD还没读完单片机给它发的啥就把内容撤走的话，就会造成数据丢失。<br>就是这个道理，为了传输稳定，所以延时一小会儿。这个延时的数值需要大家自己去试，并不一定所有的情况都延时大约1ms就够的。</p>
+<ul>
+<li><strong>效果</strong></li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1704151-44fcaae3443786b9.gif?imageMogr2/auto-orient/strip" alt="GIF.gif"></p>
+<h4 id="越界显示"><a href="#越界显示" class="headerlink" title="越界显示"></a>越界显示</h4><p>本例用于显示字符数超过16个的情况。<br><strong>代码改动</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uchar code fst[] = <span class="string">"1234567890ABCDEF"</span>;  <span class="comment">//第一行要显示的数据数组</span></span><br><span class="line">uchar code sec[] = <span class="string">"1234567890ABCDEFGHIJK"</span>;  <span class="comment">//第二行要显示的数据数组</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>初始化函数</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">	anode = <span class="number">1</span>;</span><br><span class="line">	cathode = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	RW = <span class="number">0</span>;</span><br><span class="line">	enable = <span class="number">0</span>;</span><br><span class="line">	writeCmd(DISPLAY_MODE_1602);</span><br><span class="line">	writeCmd(DISPLAY_ON_NO_CURSOR);  <span class="comment">//换成不闪的，虽然跟这个新需求没什么联系，就是给你演示下效果</span></span><br><span class="line">	writeCmd(AUTO_NEXT_STEP);</span><br><span class="line">	writeCmd(LCD_CLEAR);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>主函数</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	init();</span><br><span class="line">	writeCmd(FIRST_ROW);  <span class="comment">//发送命令：开始从第一行写入</span></span><br><span class="line">	<span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;=<span class="number">16</span>;num++)&#123;</span><br><span class="line">		writeDat(fst[num]);</span><br><span class="line">	&#125;</span><br><span class="line">	writeCmd(SECOND_ROW);  <span class="comment">//发送命令：开始从第二行写入</span></span><br><span class="line">	<span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;=<span class="number">20</span>;num++)&#123;</span><br><span class="line">		writeDat(sec[num]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">//向左移动三次，每次间隔500ms</span></span><br><span class="line">		<span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;=<span class="number">3</span>;num++) &#123;</span><br><span class="line">			writeCmd(ALL_MOVE_LEFT);  <span class="comment">//发送命令：整屏左移</span></span><br><span class="line">			delay(<span class="number">500</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		delay(<span class="number">1000</span>);  <span class="comment">//暂停大约1s</span></span><br><span class="line">        <span class="comment">//向右移动三次，每次间隔500ms</span></span><br><span class="line">		<span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;=<span class="number">3</span>;num++) &#123;</span><br><span class="line">			writeCmd(ALL_MOVE_RIGHT);  <span class="comment">//发送命令：整屏右移</span></span><br><span class="line">			delay(<span class="number">500</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		delay(<span class="number">3000</span>);  <span class="comment">//暂停大约3s后开始下一轮</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>效果</strong><br><img src="http://upload-images.jianshu.io/upload_images/1704151-9c5ef01c212ce47b.gif?imageMogr2/auto-orient/strip" alt="效果"><br>移屏只移3个字符距离，所以并没有把第二行的<code>K</code>显示出来。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>这次单讲LCD的入门应用，送给不爱看春晚的你。前两天搞定了科二考试，年后准备科三了。《扯单》系列的一周目大概还差两三篇就完结了，下集预告：串口应用。好了，看完文章实践实践后就该打麻将打麻将，该放炮仗放炮仗吧！总之大家吃好玩好。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/scm/" rel="tag"># scm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/01/14/scm-practice-timer-and-LED/" rel="next" title="51单片机实战：定时器与数码管的应用">
+                <i class="fa fa-chevron-left"></i> 51单片机实战：定时器与数码管的应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/01/29/scm-practice-serial-port-communication-with-computer/" rel="prev" title="51单片机实战：与计算机异步串行通信">
+                51单片机实战：与计算机异步串行通信 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

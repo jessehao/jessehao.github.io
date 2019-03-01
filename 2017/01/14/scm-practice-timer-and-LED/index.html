@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="文章框架   前言好久不《扯单》了！今儿来一发应用篇：用定时器和数码管做一个单十六进制位的计时器。从去年六月底辞职到现在已经过去半年多了，这方面的东西好像也扔的七七八八了（哭笑）。最近考驾照，需要花半天的时间练车，另半天的时间就是复习，然后总结到这里给需要的朋友参考。我在公司的项目是关于智能仓拣的，为了省成本选择51单片机，为了通信方便也用到了无线通信。所以我的《扯单》系列的第一周目会扯到ESP8">
+<meta name="keywords" content="scm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="51单片机实战：定时器与数码管的应用">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2017/01/14/scm-practice-timer-and-LED/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="文章框架   前言好久不《扯单》了！今儿来一发应用篇：用定时器和数码管做一个单十六进制位的计时器。从去年六月底辞职到现在已经过去半年多了，这方面的东西好像也扔的七七八八了（哭笑）。最近考驾照，需要花半天的时间练车，另半天的时间就是复习，然后总结到这里给需要的朋友参考。我在公司的项目是关于智能仓拣的，为了省成本选择51单片机，为了通信方便也用到了无线通信。所以我的《扯单》系列的第一周目会扯到ESP8">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-41b598ffd284a928.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-ce4a1da40a7951ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-d4f252d9173eff5e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-b85f48c0aa092bf9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-94c5c4cd83c2fcae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-8e6b8402cc1011b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-2d62193e4ff91bf4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-0b5130b9d890b468.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-2d62193e4ff91bf4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1704151-dd21385795a9ee0d.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2019-03-01T07:02:27.754Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="51单片机实战：定时器与数码管的应用">
+<meta name="twitter:description" content="文章框架   前言好久不《扯单》了！今儿来一发应用篇：用定时器和数码管做一个单十六进制位的计时器。从去年六月底辞职到现在已经过去半年多了，这方面的东西好像也扔的七七八八了（哭笑）。最近考驾照，需要花半天的时间练车，另半天的时间就是复习，然后总结到这里给需要的朋友参考。我在公司的项目是关于智能仓拣的，为了省成本选择51单片机，为了通信方便也用到了无线通信。所以我的《扯单》系列的第一周目会扯到ESP8">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1704151-41b598ffd284a928.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2017/01/14/scm-practice-timer-and-LED/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>51单片机实战：定时器与数码管的应用 | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2017/01/14/scm-practice-timer-and-LED/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">51单片机实战：定时器与数码管的应用
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-01-14 22:56:00" itemprop="dateCreated datePublished" datetime="2017-01-14T22:56:00+08:00">2017-01-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-01 15:02:27" itemprop="dateModified" datetime="2019-03-01T15:02:27+08:00">2019-03-01</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/扯会儿单片机开发/" itemprop="url" rel="index"><span itemprop="name">扯会儿单片机开发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="文章框架"><a href="#文章框架" class="headerlink" title="文章框架"></a>文章框架</h2><p><img src="http://upload-images.jianshu.io/upload_images/1704151-41b598ffd284a928.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="框架脑图"></p>
+<hr>
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好久不《扯单》了！今儿来一发应用篇：用定时器和数码管做一个单十六进制位的计时器。从去年六月底辞职到现在已经过去半年多了，这方面的东西好像也扔的七七八八了（哭笑）。最近考驾照，需要花半天的时间练车，另半天的时间就是复习，然后总结到这里给需要的朋友参考。我在公司的项目是关于智能仓拣的，为了省成本选择51单片机，为了通信方便也用到了无线通信。所以我的《扯单》系列的第一周目会扯到ESP8266的无线通信部分（对物联网感兴趣的朋友有福，可慢慢等我更新）。<br>今天这部分也算是对《<a href="http://www.jianshu.com/p/10b2b76571a0" target="_blank" rel="noopener">扯会儿单片机开发：中断</a>》的一个应用，顺便也用到了数码管，都是很基本的东西。下一步写通信，先有线的串口通信，我会配合LCD做示范。然后就是一周目BOSS：无线网络(Wi-Fi)通信。</p>
+<p>嗯，总之我目前是这么打算的，到时候会不会这样我就不知道了哈（任性到不能自己）。好，下面开始今天的正文。</p>
+<hr>
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h4 id="数码管（7-Segment-Display）"><a href="#数码管（7-Segment-Display）" class="headerlink" title="数码管（7-Segment Display）"></a><a href="https://en.wikipedia.org/wiki/Seven-segment_display" target="_blank" rel="noopener">数码管（7-Segment Display）</a></h4><p>图片来源于百度<br><img src="http://upload-images.jianshu.io/upload_images/1704151-ce4a1da40a7951ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数码管图示"></p>
+<p><strong>简介</strong><br>我觉得看完图片我也不用做什么介绍，大家应该都见过这东西，最多最多可能就是不知道它叫数码管。<br>数码管的本质是几个并联的发光二极管（LED）。如果不熟悉发光二极管在单片机中应用的可参考文章：《<a href="http://www.jianshu.com/p/88dfc09e7403" target="_blank" rel="noopener">51单片机实战：Proteus、Keil入门及点亮一个虚拟LED</a>》<br>本篇应用了上图的七段一位数码管，也就是说，它本质上就是由七个发光二极管并联起来组成的。虽说上图的1位数码管是有小数点的，你可以理解为那是第八个LED。但是本篇运用的是Proteus中模拟的数码管，并没有那个小数点，看到后面你就知道啦，但要注意区分。</p>
+<p><strong>分类</strong></p>
+<ul>
+<li><p>共阳（Common Anode）<br><img src="http://upload-images.jianshu.io/upload_images/1704151-d4f252d9173eff5e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Proteus模拟元件：7SEG-COM-ANODE"><br>如图就是Proteus中模拟的共阳数码管，上面单独的那个接线是7个数码管共同的阳极接线，左边七个接线是它们各自的阴极接线，所以你也就理解了“共阳”就是他们的阳极是在一起的。</p>
+</li>
+<li><p>共阴（Common Cathod）<br><img src="http://upload-images.jianshu.io/upload_images/1704151-b85f48c0aa092bf9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Proteus模拟元件：7SEG-COM-CATHODE"><br>与共阳同理，下面单独的那个接线是7个数码管共同的阴极接线，左边七个接线是他们各自的阳极接线，“共阴”就是他们的阴极是在一起的。</p>
+</li>
+<li><p>BCD（Binary Coded Decimal Display）<br><img src="http://upload-images.jianshu.io/upload_images/1704151-94c5c4cd83c2fcae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Proteus模拟元件：7SEG-BCD"><br>这个就比较特殊了，它是四个接线（分别对应十进制数字的8、4、2、1）。他只能显示十六进制的0~15（详细请自查阅二进制、十进制、十六进制的转换，这里不作讨论），也就是0、1、2、3、4、5、6、7、8、9、A、b（大写的没法区分）、C、d（大写的没法区分）、E、F。所以如果只作上述十六进制数字的表示，这个操作起来最方便，但是没有灵活性，不像共阳和共阴的可以表示很多鬼畜的东西出来。</p>
+</li>
+</ul>
+<p><strong>演示</strong><br>你看了BCD可能还清楚要怎么给它数据，但共阳共阴的哪知道它哪个接线对应哪个LED啊？<br>好，我给你图，有点丑别太在意：<br><img src="http://upload-images.jianshu.io/upload_images/1704151-8e6b8402cc1011b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="接线与其对应的LED示意图"><br>解释一下哈，这是我用平板画的，圈里面的数字对应的就是上面<strong>分类</strong>中共阳和共阴数码管左侧接线从上到下的次序。旁边的八位二进制数字是代表哪一位控制哪一个LED（第八位没用。共阳0亮1灭，共阴0灭1亮）。<br>下面用Proteus + Keil（若不会使用详见：《<a href="http://www.jianshu.com/p/88dfc09e7403" target="_blank" rel="noopener">51单片机实战：Proteus、Keil入门及点亮一个虚拟LED</a>》）做一个小程序给大家演示一下三者的区别。</p>
+<ul>
+<li><p>电路<br><img src="http://upload-images.jianshu.io/upload_images/1704151-2d62193e4ff91bf4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="电路"><br>其中左侧的是BCD（Proteus模拟元件：7SEG-BCD），右上为共阳（Proteus模拟元件：7SEG-COM-ANODE），右下为共阴（这个是不带共阴接线的，接起来比较简单，带接线的接起来有点麻烦，但原理一样。Proteus模拟元件：7SEG-DIGITAL）。</p>
+</li>
+<li><p>代码</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> VALUE 0x04	<span class="comment">//对应的二进制为：0000 0100</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	P0 = VALUE;		<span class="comment">//连接电路中的共阳数码管</span></span><br><span class="line">	P1 = VALUE;		<span class="comment">//连接电路中的BCD</span></span><br><span class="line">	P2 = VALUE;		<span class="comment">//连接电路中的共阳数码管</span></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);		  <span class="comment">//让单片机运行卡在这里，为了一直运行，不然数码管都会灭掉，大家以后写程序也要注意</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>#define</code>为预编译指令中的宏定义指令，只由编译器解释，译为将文中所有的<code>VALUE</code>替换为<code>0x04</code>。关于其二进制<code>0000 0100</code>可以回头看一下那个丑不拉几的草图。</p>
+<ul>
+<li>效果<br><img src="http://upload-images.jianshu.io/upload_images/1704151-0b5130b9d890b468.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果"><br>可以看出共阳和共阴都是对LED亮灭的操作，且正好相反。而BCD可以直接解读你给的数字。所以如果我们用共阳或共阴的数码管显示信息，就需要在代码中制作一个编码表。</li>
+</ul>
+<h4 id="定时器-计数器"><a href="#定时器-计数器" class="headerlink" title="定时器/计数器"></a>定时器/计数器</h4><p><strong>简介</strong><br>首先，“定时器/计数器”说的是一个东西，因为它既能计时也能计数。其次，它与数码管不一样，不是独立出来的配件，而是存在于单片机内部的一个独立的硬件部分，依赖晶振产生固定的时间间隔，产生了一定量的固定时间间隔后会引发定时器中断（参见：《<a href="http://www.jianshu.com/p/10b2b76571a0" target="_blank" rel="noopener">扯会儿单片机开发：中断</a>》），从而将其产生的时间信息传送给由CPU执行的主程序中。<br><strong>相关寄存器</strong></p>
+<ul>
+<li>TMOD<br>TMOD为定时器/计数器<strong>工作方式</strong>寄存器，用于确定其工作方式和功能选择。<br>字节地址：<code>89H</code>，不能位寻址，<code>reg52.h</code>中已定义，单片机复位时全部清零。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">位序号</th>
+<th style="text-align:center">7</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>位符号</strong></td>
+<td style="text-align:center">GATE</td>
+<td style="text-align:center">C/T</td>
+<td style="text-align:center">M1</td>
+<td style="text-align:center">M0</td>
+<td style="text-align:center">GATE</td>
+<td style="text-align:center">C/T</td>
+<td style="text-align:center">M1</td>
+<td style="text-align:center">M0</td>
+</tr>
+</tbody>
+</table>
+<p>你会发现,低四位和高四位格式是一样的，因为低四位（0~3）用于设置定时器0，高四位（4~7）用于设置定时器1。设置的内容都是GATE、C/T、M1、M0。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">GATE</th>
+<th style="text-align:center">C/T</th>
+<th style="text-align:center">M1M0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">门控制位</td>
+<td style="text-align:center">计数器还是定时器</td>
+<td style="text-align:center">工作方式</td>
+</tr>
+<tr>
+<td style="text-align:center">0：仅受TCON的TR位控制。1：由TR和外部中断一起控制。</td>
+<td style="text-align:center">0：定时器。1：计数器</td>
+<td style="text-align:center"><em>见下表</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">M1</th>
+<th style="text-align:center">M0</th>
+<th style="text-align:left">工作方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:left">方式0，为13位定时器/计数器</td>
+</tr>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">方式1，为16位定时器/计数器</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:left">方式2，8位初值自动重装的8位定时器/计数器</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">方式3，仅适用于T0，分成两个8位计数器，T1停止计数</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>TCON<br>TCON为定时器/计数器<strong>控制</strong>寄存器，用于控制其启动、停止，标志其溢出和中断情况。<br>字节地址：<code>88H</code>，能位寻址，<code>reg52.h</code>中已定义，单片机复位时全部清零。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">位序号</th>
+<th style="text-align:center">7</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>位符号</strong></td>
+<td style="text-align:center">TF1</td>
+<td style="text-align:center">TR1</td>
+<td style="text-align:center">TF0</td>
+<td style="text-align:center">TR0</td>
+<td style="text-align:center">IE1</td>
+<td style="text-align:center">IT1</td>
+<td style="text-align:center">IE0</td>
+<td style="text-align:center">IT0</td>
+</tr>
+</tbody>
+</table>
+<p>高八位与其运行和溢出有关，第八位与外部中断有关。</p>
+<p>高八位中：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">TF</th>
+<th style="text-align:center">TR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">溢出标志位</td>
+<td style="text-align:center">运行控制位</td>
+</tr>
+<tr>
+<td style="text-align:center">溢出时，由硬件置1</td>
+<td style="text-align:center">1：启动定时器</td>
+</tr>
+</tbody>
+</table>
+<p>TF0和TR0对应定时器0，TF1和TR1对应定时器1。</p>
+<p>低八位中：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">IE</th>
+<th style="text-align:center">IT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">外部中断请求标志</td>
+<td style="text-align:center">外部中断触发方式选择位</td>
+</tr>
+</tbody>
+</table>
+<p>IE0与IT0对应外部中断0，IE1与IT1对应外部中断1。因为此例与这里无关，不作详细介绍，有兴趣请自查资料。</p>
+<p><strong>初值</strong></p>
+<ul>
+<li><p>简介<br>定时器的实质是，由机器频率向一个16位寄存器累加，累加满溢出时触发中断。为了产生一个我们想要的时间间隔，比如说1s，所以我们要在这个寄存器里设定一个初值，以至于让它在这个初值上累加可以产生一个1s的倍数。这样我们就得到了稳定的时间间隔。<br>这个寄存器分为<code>TH</code>（高八位）和<code>TL</code>（低八位）。所以我们需要把计算好的初值分成两部分分别放入<code>TH</code>和<code>TL</code>。</p>
+</li>
+<li><p>过程<br>首先，我们通过单片机的<strong>晶振频率</strong>得知其<strong>时钟周期</strong>，再尤其乘以12得到<strong>机器周期</strong>。每一个机器周期在寄存器内<strong>+1</strong>，直到加满<strong>溢出</strong>产生<strong>中断</strong>。</p>
+</li>
+<li><p>例子<br>若单片机频率为<code>12Mhz</code>，其时钟周期就是<code>1/12μs</code>，机器周期为<code>1μs</code>，也就是每<code>1μs</code>寄存器<code>+1</code>。16位的寄存器加到溢出最多需要<code>(2^16)-1=65535μs</code>，溢出也需要一个机器周期，所以总共要<code>65536μs</code>。但这个值太别扭，和我们要的1s没什么关系。我们最好让它记<code>50000μs</code>产生一次中断，所以其初值就设为<code>65536-50000=15536</code>。但我们还要将这个值分别放在高八位和低八位，所以要将这个十进制数，转换为4位十六进制数再分开赋值。<br>十进制计算法：<code>TH = 15536/256;</code> <code>TL = 15536%256;</code>，进制计算问题这里不细讨论。<br>这样的话，每<code>50ms</code>就会产生一次中断。我们只要用程序判断其中断<code>20</code>次就记<code>1s</code>。</p>
+</li>
+</ul>
+<hr>
+<h2 id="电路"><a href="#电路" class="headerlink" title="电路"></a>电路</h2><p>这里开始进入今天实践正题，虽说电路和上面知识点的电路是一样的，但要记得把单片机的时钟频率（Clock Frequency）要调成12MHz。<br><img src="http://upload-images.jianshu.io/upload_images/1704151-2d62193e4ff91bf4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="电路"></p>
+<hr>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>代码部分我分为两个部分，一个是自定义的关于数码管编码表的头文件<code>7seg.h</code>，另一个是主程序源代码文件<code>main.c</code><br><strong>本例要实现的是在12MHz的时钟频率下，每隔一秒数码管显示的数字加一。</strong></p>
+<ul>
+<li><code>7seg.h</code></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __7SEG_H__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __7SEG_H__</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//共阳数码管的十六进制数编码表</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> code hexForCommonAnode[] = &#123;</span><br><span class="line">	<span class="number">0x40</span>, <span class="number">0x79</span>, <span class="number">0x24</span>, <span class="number">0x30</span>,</span><br><span class="line">	<span class="number">0x19</span>, <span class="number">0x12</span>, <span class="number">0x02</span>, <span class="number">0x78</span>,</span><br><span class="line">	<span class="number">0x00</span>, <span class="number">0x10</span>, <span class="number">0x08</span>, <span class="number">0x03</span>,</span><br><span class="line">	<span class="number">0x46</span>, <span class="number">0x21</span>, <span class="number">0x06</span>, <span class="number">0x0e</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//共阴数码管的十六进制数编码表</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> code hexForCommonCathode[] = &#123;</span><br><span class="line">	<span class="number">0x3f</span>, <span class="number">0x06</span>, <span class="number">0x5b</span>, <span class="number">0x4f</span>,</span><br><span class="line">	<span class="number">0x66</span>, <span class="number">0x6d</span>, <span class="number">0x7d</span>, <span class="number">0x07</span>,</span><br><span class="line">	<span class="number">0x7f</span>, <span class="number">0x6f</span>, <span class="number">0x77</span>, <span class="number">0x7c</span>,</span><br><span class="line">	<span class="number">0x39</span>, <span class="number">0x5e</span>, <span class="number">0x79</span>, <span class="number">0x71</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>main.c</code></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;reg52.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;7seg.h&gt;    //包含自定义的编码表头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> THx = (<span class="number">65536</span><span class="number">-50000</span>)/<span class="number">256</span>;    <span class="comment">//存储高八位寄存器初值的临时变量</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> TLx = (<span class="number">65536</span><span class="number">-50000</span>)%<span class="number">256</span>;    <span class="comment">//存储低八位寄存器初值的临时变量</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> counter = <span class="number">0</span>;    <span class="comment">//用于记录产生中断的次数</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> digit = <span class="number">0</span>;      <span class="comment">//用作编码表索引</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化函数：用于初始化各种参数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	TMOD = <span class="number">0x01</span>;    <span class="comment">//设置定时器0，GATE = 0, C/T = 0 , M1M0 = 01(方式1,16位定时器/计数器)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//赋初值</span></span><br><span class="line">	TH0 = THx;</span><br><span class="line">	TL0 = TLx;</span><br><span class="line"></span><br><span class="line">	EA = <span class="number">1</span>;    <span class="comment">//中断总闸·开！</span></span><br><span class="line">	ET0 = <span class="number">1</span>;  <span class="comment">//定时器0中断·开！</span></span><br><span class="line">	TR0 = <span class="number">1</span>;  <span class="comment">//定时器0·运行！</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//刷新函数：每调用一次就更新一次数码表的显示方式。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span></span>&#123;</span><br><span class="line">	counter = <span class="number">0</span>;    <span class="comment">//中断计数器清零</span></span><br><span class="line">	P0 = hexForCommonAnode[digit];    <span class="comment">//根据索引找编码表，将显示方式的二进制位丢给共阳数码管</span></span><br><span class="line">	P2 = hexForCommonCathode[digit];  <span class="comment">//根据索引找编码表，将显示方式的二进制位丢给共阴数码管</span></span><br><span class="line">	P1 = digit;    <span class="comment">//索引就是要显示的那个数字，可直接丢给BCD显示出来</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//数满后索引（数字）清零</span></span><br><span class="line">	<span class="keyword">if</span>(++digit &gt;= <span class="number">16</span>)</span><br><span class="line">		digit = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	init();     <span class="comment">//初始化</span></span><br><span class="line">	refresh();  <span class="comment">//先把0显示出来</span></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);   <span class="comment">//卡住</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定时器0的中断函数：由定时器中断自动调用，你只需要写好中断后要怎么处理就好</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">timeInt_T0</span> <span class="params">()</span> interrupt 1 </span>&#123;</span><br><span class="line">    <span class="comment">//每中断一次都要重新赋初值</span></span><br><span class="line">	TH0 = THx;</span><br><span class="line">	TL0 = TLx;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//记够20次中断后，刷新显示</span></span><br><span class="line">	<span class="keyword">if</span>(++counter == <span class="number">20</span>)</span><br><span class="line">		refresh();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://upload-images.jianshu.io/upload_images/1704151-dd21385795a9ee0d.gif?imageMogr2/auto-orient/strip" alt="效果"></p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>好了，今天就《扯单》到这里，下次不出意外的话就开始扯串口通信了。如果你对本文有什么感想和意见，欢迎在评论区畅所欲言！关于深度的话，我会慢慢加，不过也是在力所能及的范围内，毕竟只是个软工狗，还请谅解。</p>
+<p>本次实践文中加入了小部分的理论知识介绍和文章框架脑图，不知道大家喜不喜欢，有什么想法就在评论区告诉我。</p>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>1.《51单片机C语言教程》，郭天祥 著，电子工业出版社</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/scm/" rel="tag"># scm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2016/07/01/scm-develop-interrupt/" rel="next" title="扯会儿单片机开发：中断">
+                <i class="fa fa-chevron-left"></i> 扯会儿单片机开发：中断
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/01/27/scm-practice-LCD1602/" rel="prev" title="51单片机实战：液晶显示器のLCD1602">
+                51单片机实战：液晶显示器のLCD1602 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
