@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="Zeriodical">
 <meta property="og:description" content="UITableViewController 是专门设计用来应付UITableView的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp;amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。  clearSelectionOnViewWillAppear若是在UIViewController上自">
 <meta property="og:locale" content="Zh-cn">
-<meta property="og:updated_time" content="2019-03-10T09:25:21.808Z">
+<meta property="og:updated_time" content="2019-03-10T09:59:37.009Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="优雅地定制 UITableViewController">
 <meta name="twitter:description" content="UITableViewController 是专门设计用来应付UITableView的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp;amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。  clearSelectionOnViewWillAppear若是在UIViewController上自">
@@ -370,7 +370,7 @@
                 
               
 
-              <time title="Created: 2019-03-10 17:20:00 / Modified: 17:25:21" itemprop="dateCreated datePublished" datetime="2019-03-10T17:20:00+08:00">2019-03-10</time>
+              <time title="Created: 2019-03-10 17:20:00 / Modified: 17:59:37" itemprop="dateCreated datePublished" datetime="2019-03-10T17:20:00+08:00">2019-03-10</time>
             
 
             
@@ -438,15 +438,15 @@
 <ul>
 <li><p><strong><code>clearSelectionOnViewWillAppear</code></strong><br>若是在<code>UIViewController</code>上自己实现倒也是很简单。其实这个功能的名字几乎已经完全说明了他是怎么实现的。</p>
 </li>
-<li><p><strong>键盘监听与输入框防遮挡</strong><br>这个功能可以说是UITableViewController一大非常便利的功能。它提供了在列表视图中非常完美的输入框键盘防遮挡功能。只要你聚焦于其内部的某个输入框，他一定会以一种十分恰当的方式让聚焦框露出来。<br>但我们自己在UIViewController上实现的类似功能是有些费劲的。</p>
+<li><p><strong>键盘监听与输入框防遮挡</strong><br>这个功能可以说是<code>UITableViewController</code>一大非常便利的功能。它提供了在列表视图中非常完美的输入框键盘防遮挡功能。只要你聚焦于其内部的某个输入框，他一定会以一种十分恰当的方式让聚焦框露出来。<br>但我们自己在<code>UIViewController</code>上实现的类似功能是有些费劲的。</p>
 </li>
-<li><p><strong>Refresh Control</strong><br>其内部的一个好处就是，在目前主流兼容的版本中，你不需要再做版本适配，因为它是从iOS 6起兼容的。而scrollView中的相同api是从iOS 10 起。如果你的项目是iOS 10以上起步的话，就忽略这个优点吧。</p>
+<li><p><strong>Refresh Control</strong><br>其内部的一个好处就是，在目前主流兼容的版本中，你不需要再做版本适配，因为它是从iOS 6起兼容的。而<code>UIScrollView</code>中的相同api是从iOS 10 起。如果你的项目是iOS 10以上起步的话，就忽略这个优点吧。</p>
 </li>
 </ul>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><code>UITableViewController</code>的主控视图（<code>UIViewController.view</code>）是<code>UITableView</code>，而且他是继承了<code>UIScrollView</code>，所以当你直接往上面添加一个子视图（比如Toast、浮动按钮）的时候，你会发现这些子视图会跟着你页面一起上下滚动。<br>emmmm… 我当时在给公司项目接入toast的时候就是遇到了这个问题，所以我一怒之下抛弃了<code>UITableViewController</code></p>
 <h4 id="UIViewController-Data-Source-amp-Delegate"><a href="#UIViewController-Data-Source-amp-Delegate" class="headerlink" title="UIViewController + Data Source &amp; Delegate"></a><code>UIViewController</code> + Data Source &amp; Delegate</h4><p>如果我们直接用<code>UIViewController</code>，并使<code>tableView</code>作为其<code>view</code>的子视图的话，toast的问题就可以解决，因为toast所坐落的父视图并不是一个滚动视图。<br>就酱，我以为从此我找到了究极解决方案，直到有一天在我写Terrace这个库的时候，一个<code>UITableViewCell</code>内置输入框键盘防遮挡的效果迟迟不能实现成我满意的样子。就在这个时候，我想起了曾经被我抛弃的<code>UITableViewController</code>处理起键盘防遮挡如丝顺滑。我决定再试一次<code>UITableViewController</code>。</p>
 <h2 id="Customizing"><a href="#Customizing" class="headerlink" title="Customizing"></a>Customizing</h2><p>关键问题是要给<code>tableView</code>加个座垫儿。</p>
-<h4 id="作为子控制器"><a href="#作为子控制器" class="headerlink" title="作为子控制器"></a>作为子控制器</h4><p>从iOS 5开始，苹果为UIViewController增加了childViewController概念，但类似的概念并不算苹果第一次提出，UINavigationController不就是导航栏爸爸管着一群小ViewController崽子们吗？</p>
+<h4 id="作为子控制器"><a href="#作为子控制器" class="headerlink" title="作为子控制器"></a>作为子控制器</h4><p>从iOS 5开始，苹果为<code>UIViewController</code>增加了子视图控制器概念，但类似的概念并不算苹果第一次提出，<code>UINavigationController</code>不就是导航栏爸爸管着一群视图控制器崽子们吗？</p>
 <p><strong>UITableViewController 做为子控制器：</strong></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WrappedTableViewController</span> : <span class="title">UITableViewController</span> </span>&#123;</span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(<span class="number">_</span> animated: Bool)</span></span> &#123;</span><br><span class="line">		<span class="keyword">super</span>.viewWillAppear(animated)</span><br><span class="line">        <span class="comment">// 被父控制器添加为子视图后配置约束</span></span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">let</span> superview = <span class="keyword">self</span>.parent?.view &#123;</span><br><span class="line">			<span class="keyword">self</span>.tableView.translatesAutoresizingMaskIntoConstraints = <span class="literal">false</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.topAnchor.constraint(equalTo: superview.topAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.leftAnchor.constraint(equalTo: superview.leftAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>UIViewController 父控制器：</strong></p>
