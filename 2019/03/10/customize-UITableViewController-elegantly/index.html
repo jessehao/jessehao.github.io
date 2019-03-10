@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="Zh-cn">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/jessehao.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/jessehao.github.io/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/jessehao.github.io/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/jessehao.github.io/images/favicon-32x32-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/jessehao.github.io/images/favicon-16x16-next.png?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/jessehao.github.io/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/jessehao.github.io/',
+    scheme: 'Muse',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false,"dimmer":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="UITableViewController 是专门设计用来应付UITableView的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp;amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。  clearSelectionOnViewWillAppear若是在UIViewController上自">
+<meta name="keywords" content="ios">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优雅地定制 UITableViewController">
+<meta property="og:url" content="https://github.com/jessehao/jessehao.github.io.git/2019/03/10/customize-UITableViewController-elegantly/index.html">
+<meta property="og:site_name" content="Zeriodical">
+<meta property="og:description" content="UITableViewController 是专门设计用来应付UITableView的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp;amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。  clearSelectionOnViewWillAppear若是在UIViewController上自">
+<meta property="og:locale" content="Zh-cn">
+<meta property="og:updated_time" content="2019-03-10T09:25:21.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="优雅地定制 UITableViewController">
+<meta name="twitter:description" content="UITableViewController 是专门设计用来应付UITableView的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp;amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。  clearSelectionOnViewWillAppear若是在UIViewController上自">
+
+
+
+
+
+
+  <link rel="canonical" href="https://github.com/jessehao/jessehao.github.io.git/2019/03/10/customize-UITableViewController-elegantly/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>优雅地定制 UITableViewController | Zeriodical</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="Zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/jessehao.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zeriodical</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">埋头开荒，双商破冰，扬短避长，屎上醉男。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/jessehao.github.io/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/jessehao/jessehao.github.io.git/jessehao.github.io/2019/03/10/customize-UITableViewController-elegantly/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jesse Hao">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/jessehao.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zeriodical">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优雅地定制 UITableViewController
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-10 17:20:00 / Modified: 17:25:21" itemprop="dateCreated datePublished" datetime="2019-03-10T17:20:00+08:00">2019-03-10</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/jessehao.github.io/categories/iOS/UI/" itemprop="url" rel="index"><span itemprop="name">UI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>UITableViewController</code> 是专门设计用来应付<code>UITableView</code>的视图控制器，讲道理用它是比用普通的ViewController + Data Source &amp; Delegate 要方便很多的，它有很多便利的功能能加速我们开发TableViewController。</p>
+<ul>
+<li><p><strong><code>clearSelectionOnViewWillAppear</code></strong><br>若是在<code>UIViewController</code>上自己实现倒也是很简单。其实这个功能的名字几乎已经完全说明了他是怎么实现的。</p>
+</li>
+<li><p><strong>键盘监听与输入框防遮挡</strong><br>这个功能可以说是UITableViewController一大非常便利的功能。它提供了在列表视图中非常完美的输入框键盘防遮挡功能。只要你聚焦于其内部的某个输入框，他一定会以一种十分恰当的方式让聚焦框露出来。<br>但我们自己在UIViewController上实现的类似功能是有些费劲的。</p>
+</li>
+<li><p><strong>Refresh Control</strong><br>其内部的一个好处就是，在目前主流兼容的版本中，你不需要再做版本适配，因为它是从iOS 6起兼容的。而scrollView中的相同api是从iOS 10 起。如果你的项目是iOS 10以上起步的话，就忽略这个优点吧。</p>
+</li>
+</ul>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><code>UITableViewController</code>的主控视图（<code>UIViewController.view</code>）是<code>UITableView</code>，而且他是继承了<code>UIScrollView</code>，所以当你直接往上面添加一个子视图（比如Toast、浮动按钮）的时候，你会发现这些子视图会跟着你页面一起上下滚动。<br>emmmm… 我当时在给公司项目接入toast的时候就是遇到了这个问题，所以我一怒之下抛弃了<code>UITableViewController</code></p>
+<h4 id="UIViewController-Data-Source-amp-Delegate"><a href="#UIViewController-Data-Source-amp-Delegate" class="headerlink" title="UIViewController + Data Source &amp; Delegate"></a><code>UIViewController</code> + Data Source &amp; Delegate</h4><p>如果我们直接用<code>UIViewController</code>，并使<code>tableView</code>作为其<code>view</code>的子视图的话，toast的问题就可以解决，因为toast所坐落的父视图并不是一个滚动视图。<br>就酱，我以为从此我找到了究极解决方案，直到有一天在我写Terrace这个库的时候，一个<code>UITableViewCell</code>内置输入框键盘防遮挡的效果迟迟不能实现成我满意的样子。就在这个时候，我想起了曾经被我抛弃的<code>UITableViewController</code>处理起键盘防遮挡如丝顺滑。我决定再试一次<code>UITableViewController</code>。</p>
+<h2 id="Customizing"><a href="#Customizing" class="headerlink" title="Customizing"></a>Customizing</h2><p>关键问题是要给<code>tableView</code>加个座垫儿。</p>
+<h4 id="作为子控制器"><a href="#作为子控制器" class="headerlink" title="作为子控制器"></a>作为子控制器</h4><p>从iOS 5开始，苹果为UIViewController增加了childViewController概念，但类似的概念并不算苹果第一次提出，UINavigationController不就是导航栏爸爸管着一群小ViewController崽子们吗？</p>
+<p><strong>UITableViewController 做为子控制器：</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WrappedTableViewController</span> : <span class="title">UITableViewController</span> </span>&#123;</span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewWillAppear</span><span class="params">(<span class="number">_</span> animated: Bool)</span></span> &#123;</span><br><span class="line">		<span class="keyword">super</span>.viewWillAppear(animated)</span><br><span class="line">        <span class="comment">// 被父控制器添加为子视图后配置约束</span></span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">let</span> superview = <span class="keyword">self</span>.parent?.view &#123;</span><br><span class="line">			<span class="keyword">self</span>.tableView.translatesAutoresizingMaskIntoConstraints = <span class="literal">false</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.topAnchor.constraint(equalTo: superview.topAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.leftAnchor.constraint(equalTo: superview.leftAnchor).isActive = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">self</span>.tableView.rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>UIViewController 父控制器：</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="built_in">lazy</span> <span class="keyword">var</span> tableViewController = <span class="type">WrappedTableViewController</span>(style: .plain)</span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">		<span class="keyword">self</span>.addChild(<span class="keyword">self</span>.tableViewController)</span><br><span class="line">		<span class="keyword">self</span>.view.addSubview(<span class="keyword">self</span>.tableViewController.tableView)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式可能会显得仅仅起包裹作用的父控制器没什么事做，当一个座垫儿是不是有点大材小用了。</p>
+<h4 id="改变控制的tableView"><a href="#改变控制的tableView" class="headerlink" title="改变控制的tableView"></a>改变控制的<code>tableView</code></h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tableView: <span class="type">UITableView!</span> &#123; <span class="keyword">get</span> <span class="keyword">set</span> &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Returns the table view managed by the controller object.</p>
+</blockquote>
+<p>既然它的目的是返回由控制器控制的<em>table view object</em>，我们可以通过<code>override</code>来达到我们的目的，告诉它谁才是真正的主角！</p>
+<p>这次作为Container的就可以是一个UIView，而不是用UIViewController。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ContainerView</span> : <span class="title">UIView</span> </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> tableView = <span class="type">UITableView</span>()</span><br><span class="line">    <span class="comment">// ... view configurations</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>敲黑板敲黑板！注意啦注意啦！</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TableViewController</span> : <span class="title">UITableViewController</span> </span>&#123;</span><br><span class="line">	<span class="keyword">let</span> containerView = <span class="type">ContainerView</span>()</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 控制我们自己的TableView</span></span><br><span class="line">	<span class="keyword">override</span> <span class="keyword">var</span> tableView: <span class="type">UITableView!</span> &#123;</span><br><span class="line">		<span class="keyword">get</span> &#123; <span class="keyword">return</span> <span class="keyword">self</span>.containerView.tableView &#125;</span><br><span class="line">		<span class="keyword">set</span> &#123;</span><br><span class="line">			<span class="keyword">self</span>.containerView.tableView = newValue</span><br><span class="line">			newValue.delegate = <span class="keyword">self</span></span><br><span class="line">			newValue.dataSource = <span class="keyword">self</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">loadView</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">self</span>.view = <span class="keyword">self</span>.containerView <span class="comment">// 将主视图替换为自定义基底视图</span></span><br><span class="line">		<span class="keyword">self</span>.tableView.delegate = <span class="keyword">self</span></span><br><span class="line">		<span class="keyword">self</span>.tableView.dataSource = <span class="keyword">self</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先在<code>loadView</code>配置本控制器显示的主视图不再是默认的<code>tableView</code>，而是我们准备的<code>containerView</code>。然后让<code>tableView</code>的<code>getter</code>和<code>setter</code>都指向我们自己的<code>tableView</code>，<strong>别忘了指定<code>dataSource</code>和<code>delegate</code></strong>。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>当时我在<code>tableView</code>上解决toast问题和输入框键盘遮挡问题，第一次使用UITableViewController的时候也是我第一次用UITableView的时候。当时还并没有深入了解视图控制器对视图的加载时机和自定义方式，直到后来学会了利用<code>loadView</code>方法。但那个时候我已经在<code>UIViewController</code> + DataSource &amp; Delegate 的方式中走了很久，再直到后来一次在这个方式基础之上处理输入框键盘遮挡问题时觉得很麻烦，才在一次将注意力移回到UITableViewController上。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/jessehao.github.io/tags/ios/" rel="tag"># ios</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jessehao.github.io/2017/07/18/beginning-of-objc-memory-management/" rel="next" title="Objective-C的内存管理艺术：入门">
+                <i class="fa fa-chevron-left"></i> Objective-C的内存管理艺术：入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jesse Hao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/jessehao.github.io/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/jessehao.github.io/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/jessehao.github.io/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/jessehao" title="GitHub &rarr; https://github.com/jessehao"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:jeasygates@hotmail.com" title="E-Mail &rarr; mailto:jeasygates@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jesse Hao</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.0.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/jessehao.github.io/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/jessehao.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/jessehao.github.io/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/jessehao.github.io/js/src/schemes/muse.js?v=7.0.0"></script>
+
+
+
+  
+  <script src="/jessehao.github.io/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/jessehao.github.io/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/jessehao.github.io/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+  
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
